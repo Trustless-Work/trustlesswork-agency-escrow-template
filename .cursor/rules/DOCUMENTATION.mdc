@@ -1,0 +1,96 @@
+---
+description: Mandatory use of project docs in docs/ — source of truth for product, flows, roles, and MVP scope
+alwaysApply: true
+---
+
+# Project documentation — mandatory reference
+
+All product, UX, escrow-role, state-machine, and MVP-scope decisions **must** come from the files in `docs/`. Do not invent flows, screens, roles, fields, or acceptance criteria that contradict or extend beyond these documents without explicit user approval.
+
+External Trustless Work platform docs ([docs.trustlesswork.com](https://docs.trustlesswork.com/trustless-work)) cover SDK/API mechanics; **this repo’s `docs/`** cover what this template builds and how users move through it.
+
+---
+
+## Document index
+
+| File | Purpose | Read when |
+| --- | --- | --- |
+| `docs/PRODUCT-BRIEF.md` | One-liner, problem, parties, core flow, MVP scope, example milestones | Orienting on the product; quick scope checks; explaining the template |
+| `docs/PRD.md` | Full PRD: goals, non-goals, personas, user stories, functional requirements, UX screens, data model, API assumptions, MVP must/should/nice-to-have, risks, open questions, launch plan | **Any** feature, screen, form field, API shape, or business-rule work |
+| `docs/FULL-USER-FLOW_ESCROW-ROLE-MAPPING.md` | Step-by-step flows (A–H), role mapping, default MVP role assignment, state machine, UX screen list, data model, acceptance criteria, product decisions | Escrow lifecycle, wallet roles, status transitions, user journeys, integration with Trustless Work roles |
+
+**Precedence when docs overlap:** `PRD.md` and `FULL-USER-FLOW_ESCROW-ROLE-MAPPING.md` are equally authoritative for implementation details; `PRODUCT-BRIEF.md` is the executive summary—if it conflicts with the PRD or flow doc, follow the PRD/flow doc and flag the inconsistency to the user.
+
+---
+
+## Obligatory workflow for agents
+
+### Before implementing or changing behavior
+
+1. **Identify the domain** (e.g. create escrow, fund, submit milestone, approve, release, status viewer).
+2. **Read the relevant sections** in `docs/PRD.md` and `docs/FULL-USER-FLOW_ESCROW-ROLE-MAPPING.md` (use the grep/table of contents—do not skip this step).
+3. **Cross-check MVP scope** (`PRD` §15, flow doc §16): confirm the work is must-have, should-have, or explicitly requested out-of-scope work.
+4. **Map Trustless Work roles** using flow doc §2–3 and PRD §10—default MVP: client is **Approver** and **Release Signer**; agency is **Creator**, **Receiver**, and **Milestone Marker**.
+5. **Respect the state machine** (PRD §11, flow doc §12): only implement transitions and statuses defined there for MVP.
+
+### During implementation
+
+- **Screens and forms:** Match names, fields, and actors to PRD §12 (UX) and flow doc §13; required fields come from flow doc §4 (create) and related flow sections.
+- **Data model:** Align entities and metadata with PRD §13 and flow doc §14—do not add persistent fields without doc alignment.
+- **API / escrow operations:** Follow PRD §14 assumptions and flow doc acceptance criteria (§15).
+- **Copy and UX messaging:** Use product framing from `PRODUCT-BRIEF.md` and flow doc §19 where applicable.
+
+### After implementation (or when docs are stale)
+
+- If code **must** diverge from docs (bug, platform limit, user-directed change), **tell the user** which doc section is affected and suggest updating `docs/`—do not silently drift.
+- Do **not** add new markdown under `docs/` unless the user asks for documentation updates.
+
+---
+
+## Topic → doc section map
+
+Use this to open the right section quickly:
+
+| Topic | PRD | Flow doc |
+| --- | --- | --- |
+| Goals / non-goals | §4, §5 | §1, §16 |
+| Personas / user stories | §6–8 | §1, §18 |
+| Create escrow | §9.1, §12.1 | Flow A, §4 |
+| Client fund | §9.3, §12.2 | Flow B, §5 |
+| Submit milestone | §9.4 | Flow C, §6 |
+| Approve / revision | §9.5, §11.2 | Flow D, F, §7, §9 |
+| Release + fees | §9.6 | Flow E, §8 |
+| Disputes (v2+) | §11.3 | Flow G, §10 |
+| Multi-milestone | — | Flow H, §11 |
+| Escrow roles | §10 | §2–3, §17 |
+| States / transitions | §11 | §12 |
+| Screen inventory | §12 | §13 |
+| Data model | §13 | §14 |
+| MVP boundary | §15, §23 | §16, §17 |
+| Acceptance tests | §9 (functional) | §15 |
+
+---
+
+## Hard constraints from docs (MVP)
+
+Treat these as non-negotiable unless the user overrides:
+
+- **One milestone per escrow** in MVP (multi-milestone is future—flow doc §11, PRD non-goals).
+- **No** dispute resolution, partial releases, subscriptions, fiat, CRM, or full PM portal in MVP (PRD §5).
+- **Agency** creates escrow; **client** funds, approves, and releases (flow doc §3, §17).
+- **Platform fee** routed on successful release (PRD §9.6, flow doc §8).
+- Escrow **status viewer** is must-have for both parties (PRD §9.7, §15.1).
+
+---
+
+## Combining with other project rules
+
+- **Architecture / forms / folders:** Follow `.cursor/rules/DAPP.mdc`, `FORMS.mdc`, and `FOLDER_LAYOUT.mdc` for *how* to build; **`docs/`** defines *what* to build.
+- **Trustless Work SDK / blocks:** Use `.agents/skills/trustless-work/` and platform docs for *integration mechanics*; **`docs/`** defines template-specific roles, flows, and UI expectations.
+- **Conflict:** `docs/` wins on product behavior; code patterns win on structure/style. Escalate unresolved product conflicts to the user.
+
+---
+
+## When the user asks a product question
+
+Answer from `docs/` first. Cite the doc file and section (e.g. “PRD §9.4”, “Flow doc Flow C”). If the docs are silent, say so and propose options aligned with MVP non-goals and open questions (PRD §19)—do not present guesses as requirements.
