@@ -71,7 +71,7 @@ For full product requirements, user flows, state machine, and acceptance criteri
 
 ### Prerequisites
 
-- **Node.js 20+** and npm (or pnpm / yarn)
+- **Node.js 20+** and [pnpm](https://pnpm.io/)
 - A [Trustless Work API key](https://docs.trustlesswork.com/trustless-work)
 - [Freighter](https://www.freighter.app/) (or another Stellar wallet supported by Wallets Kit) on **Stellar testnet**
 - Testnet USDC (or your chosen escrow asset) and a **trustline** to the asset issuer (`G…` address, not the contract `C…` address)
@@ -84,7 +84,7 @@ git clone https://github.com/Trustless-Work/trustlesswork-agency-escrow-template
 cd trustlesswork-agency-escrow-template
 
 # Install dependencies
-npm install
+pnpm install
 
 # Copy environment variables and fill in your values
 cp .env.local.example .env.local   # create this file — see below
@@ -95,10 +95,6 @@ Create `.env.local` in the project root (never commit this file):
 ```env
 # Trustless Work API (required once SDK/blocks are wired)
 NEXT_PUBLIC_API_KEY=your_trustless_work_api_key
-NEXT_PUBLIC_USE_MAINNET=false
-
-# Stellar network (testnet for local development)
-NEXT_PUBLIC_STELLAR_NETWORK=testnet
 ```
 
 When integrating the SDK or Blocks, you will also configure role addresses, asset issuer, and provider nesting. See [Trustless Work React SDK](https://docs.trustlesswork.com/trustless-work) and the bundled agent skill at [`.agents/skills/trustless-work/`](.agents/skills/trustless-work/).
@@ -106,7 +102,7 @@ When integrating the SDK or Blocks, you will also configure role addresses, asse
 ### Run locally
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The page hot-reloads as you edit files under `src/`.
@@ -115,9 +111,9 @@ Other scripts:
 
 | Command | Description |
 | --- | --- |
-| `npm run build` | Production build |
-| `npm run start` | Serve production build |
-| `npm run lint` | Run ESLint |
+| `pnpm build` | Production build |
+| `pnpm start` | Serve production build |
+| `pnpm lint` | Run ESLint |
 
 ---
 
@@ -188,10 +184,6 @@ After saving, reload Cursor and confirm both servers show **Connected** under **
 - *Show me how to sign a transaction for releaseFunds.*
 
 Setup guide: [Trustless Work MCP](https://docs.trustlesswork.com/trustless-work/ai/mcp)
-
----
-
-![image](https://github.com/user-attachments/assets/d0cdab67-637c-4277-8297-55ebc19a6455)
 
 ---
 
