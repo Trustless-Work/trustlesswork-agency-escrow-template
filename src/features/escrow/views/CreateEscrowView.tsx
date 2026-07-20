@@ -11,7 +11,7 @@ export const CreateEscrowView = () => {
           Back to dashboard
         </Link>
         <div className="mt-8 border-b border-neutral-200 pb-8">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-neutral-500">
+          <p className="text-sm font-medium uppercase text-neutral-500">
             Create
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-normal">

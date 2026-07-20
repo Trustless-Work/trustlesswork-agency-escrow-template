@@ -5,7 +5,7 @@ export const LandingView = () => {
     <main className="min-h-screen bg-neutral-950 text-neutral-50">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-between px-6 py-10 sm:px-10 lg:px-12">
         <header className="flex items-center justify-between gap-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
+          <p className="text-sm font-semibold uppercase text-emerald-300">
             Trustless Work
           </p>
           <Link
@@ -18,7 +18,7 @@ export const LandingView = () => {
 
         <div className="grid gap-10 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div className="max-w-3xl">
-            <p className="mb-5 text-sm font-medium uppercase tracking-[0.24em] text-neutral-400">
+            <p className="mb-5 text-sm font-medium uppercase text-neutral-400">
               Agency Escrow Template
             </p>
             <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">

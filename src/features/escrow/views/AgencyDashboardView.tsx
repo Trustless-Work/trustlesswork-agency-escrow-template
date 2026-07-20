@@ -6,7 +6,7 @@ export const AgencyDashboardView = () => {
       <section className="mx-auto w-full max-w-5xl">
         <div className="flex flex-col gap-6 border-b border-neutral-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.18em] text-neutral-500">
+            <p className="text-sm font-medium uppercase text-neutral-500">
               Agency
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal">

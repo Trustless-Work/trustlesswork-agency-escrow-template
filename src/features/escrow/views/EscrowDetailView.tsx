@@ -9,7 +9,7 @@ export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
     <main className="min-h-screen bg-neutral-50 px-6 py-10 text-neutral-950 sm:px-10">
       <section className="mx-auto w-full max-w-5xl">
         <div className="border-b border-neutral-200 pb-8">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-neutral-500">
+          <p className="text-sm font-medium uppercase text-neutral-500">
             Escrow Viewer
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-normal">
