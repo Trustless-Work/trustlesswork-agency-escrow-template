@@ -11,12 +11,8 @@ const TrustlessWorkContext = createContext<TrustlessWorkContextType | undefined>
 )
 
 export function TrustlessWorkProvider({ children }: { children: ReactNode }) {
-  const [initialized, setInitialized] = React.useState(false)
-  const [mode, setMode] = React.useState<'testnet' | 'mainnet'>('testnet')
-
-  React.useEffect(() => {
-    setInitialized(true)
-  }, [])
+  const initialized = true
+  const mode = 'testnet' as const
 
   return (
     <TrustlessWorkContext.Provider value={{ initialized, mode }}>

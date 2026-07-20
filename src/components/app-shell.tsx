@@ -1,6 +1,7 @@
 "use client"
 import * as React from 'react'
 import { MoonIcon, SunIcon } from 'lucide-react'
+import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -33,9 +34,9 @@ export function AppShell({
             <span>Agency Escrow</span>
           </div>
           <nav className="flex items-center gap-4">
-            <a href="/agency" className="text-sm font-medium hover:underline">
+            <Link href="/agency" className="text-sm font-medium hover:underline">
               Agency Dashboard
-            </a>
+            </Link>
             <a
               href="https://docs.trustlesswork.com"
               target="_blank"

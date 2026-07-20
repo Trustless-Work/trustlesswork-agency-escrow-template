@@ -1,4 +1,5 @@
 import { AppShell } from "@/components/app-shell";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -11,12 +12,12 @@ export default function Home() {
           A milestone-based escrow workflow for agencies, consultants, and product studios. Secure client funds upfront, deliver work in clear increments, and release payment only after approval.
         </p>
         <div className="flex gap-4">
-          <a
+          <Link
             href="/agency"
             className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
           >
             Agency Dashboard
-          </a>
+          </Link>
         </div>
       </div>
     </AppShell>
