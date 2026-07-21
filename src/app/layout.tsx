@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { ReactQueryProvider } from "@/lib/react-query-provider";
@@ -7,19 +6,10 @@ import { WalletProvider } from "@/lib/wallet-provider";
 import { TrustlessWorkProvider } from "@/lib/trustlesswork-provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "Agency Escrow Template",
-  description: "Milestone-based escrow workflow for agencies",
+  description:
+    "A milestone-based escrow workflow for agencies built with Trustless Work.",
 };
 
 export default function RootLayout({
