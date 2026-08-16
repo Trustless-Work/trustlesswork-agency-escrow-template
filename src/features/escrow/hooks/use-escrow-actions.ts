@@ -2,11 +2,13 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
+  AgencyEscrowRoles,
   CreateAgencyEscrowInput,
   RequestChangesInput,
   SubmitDeliverableInput,
 } from "@/types/agency-escrow";
 import { getAgencyEscrowService } from "@/features/escrow/services/escrow-service";
+import { useWallet } from "@/lib/wallet-provider";
 import { escrowQueryKeys } from "./query-keys";
 
 function useRefreshEscrow() {
@@ -23,6 +25,28 @@ function useRefreshEscrow() {
   };
 }
 
+type ActionRole = keyof Pick<
+  AgencyEscrowRoles,
+  "funder" | "serviceProvider" | "approver" | "releaseSigner"
+>;
+
+function useActionActor() {
+  const { address, isMock } = useWallet();
+
+  return async (escrowId: string, role: ActionRole) => {
+    if (!isMock) {
+      if (!address) {
+        throw new Error("Connect the required Stellar wallet before continuing.");
+      }
+      return address;
+    }
+
+    const escrow = await getAgencyEscrowService().getEscrow(escrowId);
+    if (!escrow) throw new Error(`Escrow not found: ${escrowId}`);
+    return escrow.roles[role];
+  };
+}
+
 export function useCreateProtectedPayment() {
   const refresh = useRefreshEscrow();
 
@@ -35,48 +59,58 @@ export function useCreateProtectedPayment() {
 
 export function useFundProtectedPayment(escrowId: string) {
   const refresh = useRefreshEscrow();
+  const resolveActor = useActionActor();
 
   return useMutation({
-    mutationFn: (actorAddress: string) =>
-      getAgencyEscrowService().fundEscrow({ escrowId, actorAddress }),
+    mutationFn: async () => {
+      const actorAddress = await resolveActor(escrowId, "funder");
+      return getAgencyEscrowService().fundEscrow({ escrowId, actorAddress });
+    },
     onSuccess: () => refresh(escrowId),
   });
 }
 
 export function useSubmitDeliverable(escrowId: string) {
   const refresh = useRefreshEscrow();
+  const resolveActor = useActionActor();
 
   return useMutation({
-    mutationFn: ({
-      actorAddress,
-      data,
-    }: {
-      actorAddress: string;
-      data: SubmitDeliverableInput;
-    }) =>
-      getAgencyEscrowService().submitDeliverable({ escrowId, actorAddress, data }),
+    mutationFn: async (data: SubmitDeliverableInput) => {
+      const actorAddress = await resolveActor(escrowId, "serviceProvider");
+      return getAgencyEscrowService().submitDeliverable({
+        escrowId,
+        actorAddress,
+        data,
+      });
+    },
     onSuccess: () => refresh(escrowId),
   });
 }
 
 export function useReviewDeliverable(escrowId: string) {
   const refresh = useRefreshEscrow();
+  const resolveActor = useActionActor();
 
   const approveMutation = useMutation({
-    mutationFn: (actorAddress: string) =>
-      getAgencyEscrowService().approveDeliverable({ escrowId, actorAddress }),
+    mutationFn: async () => {
+      const actorAddress = await resolveActor(escrowId, "approver");
+      return getAgencyEscrowService().approveDeliverable({
+        escrowId,
+        actorAddress,
+      });
+    },
     onSuccess: () => refresh(escrowId),
   });
 
   const requestChangesMutation = useMutation({
-    mutationFn: ({
-      actorAddress,
-      data,
-    }: {
-      actorAddress: string;
-      data: RequestChangesInput;
-    }) =>
-      getAgencyEscrowService().requestChanges({ escrowId, actorAddress, data }),
+    mutationFn: async (data: RequestChangesInput) => {
+      const actorAddress = await resolveActor(escrowId, "approver");
+      return getAgencyEscrowService().requestChanges({
+        escrowId,
+        actorAddress,
+        data,
+      });
+    },
     onSuccess: () => refresh(escrowId),
   });
 
@@ -91,10 +125,16 @@ export function useReviewDeliverable(escrowId: string) {
 
 export function useReleaseProtectedPayment(escrowId: string) {
   const refresh = useRefreshEscrow();
+  const resolveActor = useActionActor();
 
   return useMutation({
-    mutationFn: (actorAddress: string) =>
-      getAgencyEscrowService().releaseProtectedPayment({ escrowId, actorAddress }),
+    mutationFn: async () => {
+      const actorAddress = await resolveActor(escrowId, "releaseSigner");
+      return getAgencyEscrowService().releaseProtectedPayment({
+        escrowId,
+        actorAddress,
+      });
+    },
     onSuccess: () => refresh(escrowId),
   });
 }

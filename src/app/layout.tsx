@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 export const metadata: Metadata = {
   title: "Agency Escrow Template",
   description:
-    "A milestone-based escrow workflow for agencies built with Trustless Work.",
+    "A bidirectional protected-payment workflow for service agreements built with Trustless Work.",
 };
 
 export default function RootLayout({
@@ -18,20 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className="h-full antialiased"
-      suppressHydrationWarning
-    >
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <ReactQueryProvider>
-            <WalletProvider>
-              <TrustlessWorkProvider>
+            <TrustlessWorkProvider>
+              <WalletProvider>
                 {children}
                 <Toaster />
-              </TrustlessWorkProvider>
-            </WalletProvider>
+              </WalletProvider>
+            </TrustlessWorkProvider>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>
