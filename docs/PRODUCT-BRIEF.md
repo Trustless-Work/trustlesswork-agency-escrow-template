@@ -1,86 +1,83 @@
-## Agency Escrow Template — Product Brief
+# Product Brief — Agency Escrow Template V1
 
-Full User Flow + Escrow Role Mapping
+## Product idea
 
-### One-liner
+**Put escrow around work you already agreed on.**
 
-A milestone-based escrow workflow for agencies, consultants, and product studios to secure client funds upfront, deliver work in clear increments, and release payment only after approval.
+The template is for an agency, studio, consultant, freelancer, or small organization that already has a proposal, contract, SOW, quote, or otherwise agreed commercial terms and wants to protect one payment with escrow.
 
-### Core Problem
+The app is not a contract generator, CRM, or project-management suite. The agreement defines the relationship; escrow protects the payment.
 
-Agency work breaks when **delivery, scope, and payment** become unclear.
+## Canonical workspace example
 
-Clients do not want to pay large retainers blindly.
+TechRebel is the workspace/operator. For each escrow it may be on either side of the payment:
 
-Agencies do not want to start work without secured funds.
+### Receivable — we are getting paid
 
-Both sides lose trust when invoices, approvals, and deliverables are tracked separately.
+`Acme → TechRebel`
 
-### Core Use Case
+Acme funds the escrow, TechRebel delivers, Acme approves/releases, TechRebel receives funds.
 
-A client funds an escrow for a specific deliverable, sprint, epic, or milestone. The agency starts work once funds are secured. When the work is delivered, the client approves it and funds are released to the agency.
+### Payable — we are paying someone
 
-### Parties
+`TechRebel → Maria`
 
-| Party | Role |
-| --- | --- |
-| Client | Funds escrow and approves delivery |
-| Agency / Provider | Delivers the work and receives payment |
-| Milestone Marker | Marks work as submitted / completed |
-| Approver | Confirms milestone acceptance |
-| Release Signer | Releases funds after approval |
-| Platform Address | Receives Trustless Work/platform fee |
-| Optional Resolver | Handles disputes |
+TechRebel funds the escrow, Maria delivers, TechRebel approves/releases, Maria receives funds.
 
-### Core Flow
+The product therefore must not treat `Agency` and `Client` as permanent economic roles.
 
-1. Client and agency define a milestone.
-2. Client funds escrow.
-3. Agency begins work.
-4. Agency submits deliverable.
-5. Milestone is marked as completed.
-6. Client reviews.
-7. Client approves or disputes.
-8. Funds are released to agency.
-9. Platform fee is routed.
-10. Next milestone escrow is created or funded.
+## V1 mental model
 
-### MVP Version
+1. Choose whether the workspace is getting paid or paying someone.
+2. Identify the counterparty.
+3. Capture the one payment being protected.
+4. Capture the deliverable and acceptance criteria.
+5. Create a one-milestone Single-Release escrow.
+6. Payer funds.
+7. Service provider submits delivery/evidence.
+8. Approver approves or requests revisions before approval.
+9. Release signer releases funds to the payee.
 
-**Template name:** Agency Escrow Template
+## V1 principle
 
-**MVP scope:**
+> One escrow protects one payment/deliverable from an agreement that already exists.
 
-- Create escrow for one milestone
-- Define client, agency, approver, release signer, and platform fee address
-- Fund escrow
-- Mark milestone as completed
-- Approve milestone
-- Release funds
-- Show escrow status in dashboard/viewer
+A larger contract may produce several independent escrows over time. V1 does not reproduce the full legal agreement on-chain.
 
-### Example
+## Product language
 
-A client hires Tech Rebel for a `$5,000/month` product sprint.
+Prefer human payment language in the primary UX:
 
-The sprint is split into 4 milestones:
+- Workspace / organization
+- Counterparty
+- Payer
+- Payee / service provider
+- Deliverable
+- Acceptance criteria
+- Fund
+- Submit work
+- Approve
+- Release
 
-| Milestone | Value |
-| --- | --- |
-| Product discovery brief | $1,250 |
-| User flow + scope definition | $1,250 |
-| Prototype / implementation plan | $1,250 |
-| Final handoff package | $1,250 |
+Trustless Work protocol roles are derived automatically and may be shown in advanced/debug views only.
 
-Each milestone can be funded, delivered, approved, and released independently.
+## Trustless Work implementation
 
-### Why This Is Strong
+V1 uses **Single-Release** escrow with **one milestone**.
 
-- Immediate internal dogfooding
-- Clear pain
-- Simple workflow
-- Natural milestone structure
-- Strong stablecoin use case for global agencies
-- Easy content angle: “stop chasing invoices”
-- Strong template for developers to copy
-- Can evolve into a vertical later
+Application mapping:
+
+- payer → funder
+- payee → receiver
+- payee → service provider
+- payer → approver
+- payer → release signer
+- workspace → issuer by default
+- configured platform → platform address
+- configured resolver → dispute resolver
+
+Approval is irreversible on-chain. `Request changes` is a pre-approval product state, not an on-chain unapproval operation.
+
+## V1 success criteria
+
+A new user can understand and complete both TechRebel scenarios without needing to understand Stellar, XDR, Soroban, or Trustless Work role names.
