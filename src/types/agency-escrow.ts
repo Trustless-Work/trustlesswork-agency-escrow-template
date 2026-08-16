@@ -1,6 +1,7 @@
 export type AgencyEscrowTemplateType = "agency_payment";
 
 export type PaymentDirection = "receivable" | "payable";
+export type EscrowRuntimeMode = "mock" | "testnet";
 
 export type AgencyEscrowStatus =
   | "created"
@@ -47,9 +48,9 @@ export type AgencyEscrowMilestone = {
 };
 
 /**
- * Application-level role mapping. The Trustless Work adapter maps these fields
- * to the SDK payload shape. `funder` and `issuer` are retained here because the
- * app needs them for authorization even when a specific SDK payload does not.
+ * Application-level authorization map. The Trustless Work adapter translates
+ * this into SDK payload fields. Keeping issuer/funder here lets the app express
+ * actor authorization even when a particular SDK payload uses `signer` instead.
  */
 export type AgencyEscrowRoles = {
   issuer: string;
@@ -103,16 +104,18 @@ export type AgencyEscrow = {
   transactions: AgencyEscrowTransactions;
 };
 
-export type CreateAgencyEscrowInput = Omit<
-  AgencyEscrow,
-  | "escrowId"
-  | "contractId"
-  | "templateType"
-  | "roles"
-  | "status"
-  | "timestamps"
-  | "transactions"
-> & {
+export type CreateAgencyEscrowInput = {
+  engagementId: string;
+  paymentDirection: PaymentDirection;
+  workspace: AgencyEscrowParty;
+  counterparty: AgencyEscrowParty;
+  agreement: AgencyEscrowAgreement;
+  payment: AgencyEscrowPayment;
+  milestone: Pick<
+    AgencyEscrowMilestone,
+    "title" | "description" | "acceptanceCriteria"
+  >;
+  platformFeeBps: number;
   platformAddress: string;
   disputeResolverAddress: string;
 };

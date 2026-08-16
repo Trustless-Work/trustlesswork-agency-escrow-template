@@ -34,10 +34,7 @@ export const createEscrowSchema = z.object({
       .trim()
       .min(1, "Acceptance criteria are required"),
   }),
-  fee: z.object({
-    platformFeeBps: z.number().int().min(0).max(10_000),
-    platformAddress: stellarAddressSchema,
-  }),
+  platformFeeBps: z.number().int().min(0).max(10_000),
   platformAddress: stellarAddressSchema,
   disputeResolverAddress: stellarAddressSchema,
 });
