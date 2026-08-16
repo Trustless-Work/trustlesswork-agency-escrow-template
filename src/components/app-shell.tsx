@@ -30,12 +30,12 @@ export function AppShell({
     <div className="flex min-h-screen flex-col">
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2 font-semibold">
-            <span>Agency Escrow</span>
-          </div>
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <span>Agency Escrow Demo</span>
+          </Link>
           <nav className="flex items-center gap-4">
             <Link href="/agency" className="text-sm font-medium hover:underline">
-              Agency Dashboard
+              Escrows
             </Link>
             <a
               href="https://docs.trustlesswork.com"
