@@ -11,7 +11,7 @@ type EscrowCardProps = {
   escrow: AgencyEscrow;
 };
 
-export function EscrowCard({ escrow }: EscrowCardProps) {
+export const EscrowCard = ({ escrow }: EscrowCardProps) => {
   const { payer, payee } = getPaymentParties(
     escrow.paymentDirection,
     escrow.workspace,
@@ -63,4 +63,4 @@ export function EscrowCard({ escrow }: EscrowCardProps) {
       </Card>
     </Link>
   );
-}
+};

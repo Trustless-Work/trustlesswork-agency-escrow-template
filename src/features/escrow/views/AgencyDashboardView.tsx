@@ -9,11 +9,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import type { SortOption } from "@/features/escrow/components/dashboard/escrow-dashboard-utils";
 
-type SortKey = "newest" | "status";
-
-export const AgencyDashboardView = () => {
+const useAgencyDashboard = () => {
   const { data: escrows, isLoading, isError, error } = useAgencyEscrows();
-  const [sort, setSort] = useState<SortKey>("newest");
+  const [sort, setSort] = useState<SortOption>("newest");
 
   const sorted = useMemo(() => {
     if (!escrows) return [];
@@ -27,6 +25,41 @@ export const AgencyDashboardView = () => {
     items.sort((a, b) => a.status.localeCompare(b.status));
     return items;
   }, [escrows, sort]);
+
+  return { escrows, isLoading, isError, error, sort, setSort, sorted };
+};
+
+const DashboardSkeleton = () => (
+  <>
+    <div className="mt-8 grid gap-4 sm:grid-cols-2 md:hidden">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index} className="space-y-3 rounded-lg border border-neutral-200 bg-white p-5">
+          <Skeleton className="h-5 w-2/3" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-1/3" />
+        </div>
+      ))}
+    </div>
+    <div className="mt-8 hidden overflow-hidden rounded-lg border border-neutral-200 bg-white md:block">
+      <div className="grid grid-cols-6 gap-4 border-b border-neutral-200 bg-neutral-50 px-4 py-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Skeleton key={index} className="h-4 w-20" />
+        ))}
+      </div>
+      {Array.from({ length: 4 }).map((_, row) => (
+        <div key={row} className="grid grid-cols-6 gap-4 border-b border-neutral-100 px-4 py-4 last:border-b-0">
+          {Array.from({ length: 6 }).map((_, column) => (
+            <Skeleton key={column} className="h-5 w-full max-w-28" />
+          ))}
+        </div>
+      ))}
+    </div>
+  </>
+);
+
+export const AgencyDashboardView = () => {
+  const { escrows, isLoading, isError, error, sort, setSort, sorted } =
+    useAgencyDashboard();
 
   return (
     <main className="min-h-screen bg-neutral-50 px-6 py-10 text-neutral-950 sm:px-10">
@@ -75,15 +108,7 @@ export const AgencyDashboardView = () => {
         </div>
 
         {isLoading ? (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="space-y-3 rounded-lg border border-neutral-200 bg-white p-5">
-                <Skeleton className="h-5 w-2/3" />
-                <Skeleton className="h-4 w-1/2" />
-                <Skeleton className="h-4 w-1/3" />
-              </div>
-            ))}
-          </div>
+          <DashboardSkeleton />
         ) : isError ? (
           <div className="mt-10 rounded-md border border-red-200 bg-red-50 p-6 text-sm text-red-700">
             <p className="font-medium">Unable to load escrows</p>

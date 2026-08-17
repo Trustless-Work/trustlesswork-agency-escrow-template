@@ -66,9 +66,18 @@ export function formatAmount(amount: number, asset: string): string {
 
 export function formatDate(date?: string): string {
   if (!date) return "";
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
+  const value = dateOnly
+    ? new Date(
+        Number(dateOnly[1]),
+        Number(dateOnly[2]) - 1,
+        Number(dateOnly[3]),
+      )
+    : new Date(date);
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(date));
+  }).format(value);
 }

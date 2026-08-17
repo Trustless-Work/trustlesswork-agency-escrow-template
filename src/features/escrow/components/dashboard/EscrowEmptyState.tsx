@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 
-export function EscrowEmptyState() {
+export const EscrowEmptyState = () => {
   return (
     <Card className="p-6">
       <p className="text-sm font-medium text-neutral-950">
@@ -18,4 +18,4 @@ export function EscrowEmptyState() {
       </Link>
     </Card>
   );
-}
+};
