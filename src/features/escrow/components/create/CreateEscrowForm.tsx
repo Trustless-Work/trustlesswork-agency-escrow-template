@@ -14,7 +14,13 @@ import { useWallet } from "@/lib/wallet-provider";
 import { cn } from "@/lib/utils";
 import { DirectionField } from "./DirectionField";
 import { EscrowPreview } from "./EscrowPreview";
-import { Field, FormSection, fieldInputClass, inputStateClass } from "./form-primitives";
+import {
+  Field,
+  FormSection,
+  fieldA11y,
+  fieldInputClass,
+  inputStateClass,
+} from "./form-primitives";
 import {
   DEFAULT_DISPUTE_RESOLVER_ADDRESS,
   DEFAULT_PLATFORM_ADDRESS,
@@ -71,10 +77,10 @@ function toCreateInput(values: FormValues): CreateAgencyEscrowInput {
   };
 }
 
-export function CreateEscrowForm({
+export const CreateEscrowForm = ({
   onCreate,
   isSubmitting,
-}: CreateEscrowFormProps) {
+}: CreateEscrowFormProps) => {
   const { address, isMock, connect } = useWallet();
 
   const form = useForm<FormValues>({
@@ -134,6 +140,8 @@ export function CreateEscrowForm({
   const asset = values.payment?.asset ?? "USDC";
   const fee = calculateFeeBreakdown(safeAmount, DEFAULT_PLATFORM_FEE_BPS);
 
+  const walletMissing = !isMock && !address;
+
   const submit = form.handleSubmit(async (validated) => {
     try {
       await onCreate(toCreateInput(validated));
@@ -145,8 +153,6 @@ export function CreateEscrowForm({
       );
     }
   });
-
-  const walletMissing = !isMock && !address;
 
   return (
     <form onSubmit={submit} noValidate className="w-full">
@@ -187,6 +193,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     inputStateClass(Boolean(errors.workspace?.name)),
                   )}
+                  {...fieldA11y(
+                    "workspace-name",
+                    Boolean(errors.workspace?.name),
+                    false,
+                  )}
                   {...register("workspace.name")}
                 />
               </Field>
@@ -202,13 +213,18 @@ export function CreateEscrowForm({
                   )}
                 </div>
                 {walletMissing ? (
-                  <button
-                    type="button"
-                    onClick={() => void connect()}
-                    className="mt-2 inline-flex items-center gap-2 rounded-md bg-neutral-950 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900"
-                  >
-                    Connect wallet
-                  </button>
+                  <div className="mt-2 space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={() => void connect()}
+                      className="inline-flex items-center gap-2 rounded-md bg-neutral-950 px-3 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900"
+                    >
+                      Connect wallet
+                    </button>
+                    <p className="text-xs font-medium text-red-600 dark:text-red-400">
+                      Connect your Stellar wallet to create the escrow.
+                    </p>
+                  </div>
                 ) : (
                   <p className="mt-1 break-all font-mono text-xs text-neutral-700 dark:text-neutral-300">
                     {values.workspace?.walletAddress || "—"}
@@ -242,6 +258,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     inputStateClass(Boolean(errors.counterparty?.name)),
                   )}
+                  {...fieldA11y(
+                    "counterparty-name",
+                    Boolean(errors.counterparty?.name),
+                    false,
+                  )}
                   {...register("counterparty.name")}
                 />
               </Field>
@@ -259,6 +280,11 @@ export function CreateEscrowForm({
                   className={cn(
                     fieldInputClass,
                     inputStateClass(Boolean(errors.counterparty?.email)),
+                  )}
+                  {...fieldA11y(
+                    "counterparty-email",
+                    Boolean(errors.counterparty?.email),
+                    false,
                   )}
                   {...register("counterparty.email")}
                 />
@@ -279,6 +305,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     "font-mono",
                     inputStateClass(Boolean(errors.counterparty?.walletAddress)),
+                  )}
+                  {...fieldA11y(
+                    "counterparty-wallet",
+                    Boolean(errors.counterparty?.walletAddress),
+                    true,
                   )}
                   {...register("counterparty.walletAddress")}
                 />
@@ -306,6 +337,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     inputStateClass(Boolean(errors.agreement?.title)),
                   )}
+                  {...fieldA11y(
+                    "agreement-title",
+                    Boolean(errors.agreement?.title),
+                    false,
+                  )}
                   {...register("agreement.title")}
                 />
               </Field>
@@ -323,6 +359,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     "resize-y",
                     inputStateClass(Boolean(errors.agreement?.description)),
+                  )}
+                  {...fieldA11y(
+                    "agreement-description",
+                    Boolean(errors.agreement?.description),
+                    false,
                   )}
                   {...register("agreement.description")}
                 />
@@ -342,6 +383,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     inputStateClass(Boolean(errors.agreement?.agreementUrl)),
                   )}
+                  {...fieldA11y(
+                    "agreement-url",
+                    Boolean(errors.agreement?.agreementUrl),
+                    false,
+                  )}
                   {...register("agreement.agreementUrl")}
                 />
               </Field>
@@ -351,6 +397,7 @@ export function CreateEscrowForm({
                   label={copy.amountLabel}
                   htmlFor="payment-amount"
                   error={errors.payment?.amount?.message}
+                  hint={copy.amountHint}
                 >
                   <input
                     id="payment-amount"
@@ -362,6 +409,11 @@ export function CreateEscrowForm({
                     className={cn(
                       fieldInputClass,
                       inputStateClass(Boolean(errors.payment?.amount)),
+                    )}
+                    {...fieldA11y(
+                      "payment-amount",
+                      Boolean(errors.payment?.amount),
+                      true,
                     )}
                     {...register("payment.amount", {
                       setValueAs: (v) =>
@@ -382,6 +434,11 @@ export function CreateEscrowForm({
                     className={cn(
                       fieldInputClass,
                       inputStateClass(Boolean(errors.payment?.asset)),
+                    )}
+                    {...fieldA11y(
+                      "payment-asset",
+                      Boolean(errors.payment?.asset),
+                      false,
                     )}
                     {...register("payment.asset")}
                   >
@@ -408,6 +465,11 @@ export function CreateEscrowForm({
                       fieldInputClass,
                       inputStateClass(Boolean(errors.agreement?.dueDate)),
                     )}
+                    {...fieldA11y(
+                      "agreement-due",
+                      Boolean(errors.agreement?.dueDate),
+                      false,
+                    )}
                     {...register("agreement.dueDate")}
                   />
                 </Field>
@@ -426,6 +488,11 @@ export function CreateEscrowForm({
                         fieldInputClass,
                         "font-mono",
                         inputStateClass(Boolean(errors.engagementId)),
+                      )}
+                      {...fieldA11y(
+                        "engagement-id",
+                        Boolean(errors.engagementId),
+                        true,
                       )}
                       {...register("engagementId")}
                     />
@@ -471,6 +538,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     inputStateClass(Boolean(errors.milestone?.title)),
                   )}
+                  {...fieldA11y(
+                    "milestone-title",
+                    Boolean(errors.milestone?.title),
+                    false,
+                  )}
                   {...register("milestone.title")}
                 />
               </Field>
@@ -488,6 +560,11 @@ export function CreateEscrowForm({
                     fieldInputClass,
                     "resize-y",
                     inputStateClass(Boolean(errors.milestone?.description)),
+                  )}
+                  {...fieldA11y(
+                    "milestone-description",
+                    Boolean(errors.milestone?.description),
+                    false,
                   )}
                   {...register("milestone.description")}
                 />
@@ -509,6 +586,11 @@ export function CreateEscrowForm({
                     inputStateClass(
                       Boolean(errors.milestone?.acceptanceCriteria),
                     ),
+                  )}
+                  {...fieldA11y(
+                    "milestone-acceptance",
+                    Boolean(errors.milestone?.acceptanceCriteria),
+                    true,
                   )}
                   {...register("milestone.acceptanceCriteria")}
                 />
@@ -537,7 +619,7 @@ export function CreateEscrowForm({
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || walletMissing}
               className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
@@ -553,11 +635,13 @@ export function CreateEscrowForm({
               )}
             </button>
             <p className="text-center text-xs text-neutral-500 dark:text-neutral-400">
-              Runs in mock mode — no wallet signature or API key required.
+              {walletMissing
+                ? "Connect your Stellar wallet to continue."
+                : "Runs in mock mode — no wallet signature or API key required."}
             </p>
           </div>
         </aside>
       </div>
     </form>
   );
-}
+};

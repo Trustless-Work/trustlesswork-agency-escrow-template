@@ -74,6 +74,8 @@ export type DirectionCopy = {
   counterpartyWalletLabel: string;
   /** Amount label. */
   amountLabel: string;
+  /** Helper clarifying the gross-vs-net relationship for the amount field. */
+  amountHint: string;
   /** Heading for the deliverable/acceptance section. */
   deliverableHeading: string;
   deliverableDescription: string;
@@ -105,7 +107,9 @@ const COPY: Record<PaymentDirection, DirectionCopy> = {
     counterpartyNameLabel: "Client name",
     counterpartyNamePlaceholder: "e.g. Acme Inc.",
     counterpartyWalletLabel: "Client Stellar wallet",
-    amountLabel: "Amount you'll receive",
+    amountLabel: "Amount to invoice",
+    amountHint:
+      "Full amount held in escrow, before the platform fee. Your net payout is shown in the preview.",
     deliverableHeading: "What you'll deliver",
     deliverableDescription:
       "Describe the work you'll submit for the client to review.",
@@ -130,6 +134,8 @@ const COPY: Record<PaymentDirection, DirectionCopy> = {
     counterpartyNamePlaceholder: "e.g. Maria Santos",
     counterpartyWalletLabel: "Payee Stellar wallet",
     amountLabel: "Amount you'll pay",
+    amountHint:
+      "Full amount funded into escrow. The payee's net, after the platform fee, is shown in the preview.",
     deliverableHeading: "What they'll deliver",
     deliverableDescription:
       "Describe the work the payee will submit for you to review.",

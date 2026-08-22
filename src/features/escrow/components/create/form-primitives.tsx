@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * Create-flow-only styled form primitives. They use explicit utility classes so
  * the screen renders correctly in the default light theme (the shared shadcn
- * token utilities are only defined for the dark media query in this template),
+ * token utilities are only wired for the dark media query in this template),
  * while still layering in `dark:` variants for a polished dark experience.
  */
 
@@ -17,6 +17,31 @@ export function inputStateClass(hasError: boolean): string {
     : "border-neutral-300 focus:border-emerald-500 focus:ring-emerald-500/30 dark:border-neutral-700";
 }
 
+export function errorId(htmlFor: string): string {
+  return `${htmlFor}-error`;
+}
+
+export function hintId(htmlFor: string): string {
+  return `${htmlFor}-hint`;
+}
+
+/**
+ * Accessibility props that tie a control to its error/hint text so assistive
+ * technology receives the validation state even though native validation is off.
+ */
+export function fieldA11y(
+  htmlFor: string,
+  hasError: boolean,
+  hasHint: boolean,
+): { "aria-invalid": boolean; "aria-describedby"?: string } {
+  const describedBy = hasError
+    ? errorId(htmlFor)
+    : hasHint
+      ? hintId(htmlFor)
+      : undefined;
+  return { "aria-invalid": hasError, "aria-describedby": describedBy };
+}
+
 type FormSectionProps = {
   step?: number;
   title: string;
@@ -25,13 +50,13 @@ type FormSectionProps = {
   className?: string;
 };
 
-export function FormSection({
+export const FormSection = ({
   step,
   title,
   description,
   children,
   className,
-}: FormSectionProps) {
+}: FormSectionProps) => {
   return (
     <section
       className={cn(
@@ -59,7 +84,7 @@ export function FormSection({
       <div className="mt-5">{children}</div>
     </section>
   );
-}
+};
 
 type FieldProps = {
   label: string;
@@ -71,7 +96,7 @@ type FieldProps = {
   children: ReactNode;
 };
 
-export function Field({
+export const Field = ({
   label,
   htmlFor,
   error,
@@ -79,7 +104,7 @@ export function Field({
   optional,
   className,
   children,
-}: FieldProps) {
+}: FieldProps) => {
   return (
     <div className={cn("space-y-1.5", className)}>
       <label
@@ -93,12 +118,21 @@ export function Field({
       </label>
       {children}
       {error ? (
-        <p className="text-xs font-medium text-red-600 dark:text-red-400">
+        <p
+          id={errorId(htmlFor)}
+          role="alert"
+          className="text-xs font-medium text-red-600 dark:text-red-400"
+        >
           {error}
         </p>
       ) : hint ? (
-        <p className="text-xs text-neutral-500 dark:text-neutral-400">{hint}</p>
+        <p
+          id={hintId(htmlFor)}
+          className="text-xs text-neutral-500 dark:text-neutral-400"
+        >
+          {hint}
+        </p>
       ) : null}
     </div>
   );
-}
+};

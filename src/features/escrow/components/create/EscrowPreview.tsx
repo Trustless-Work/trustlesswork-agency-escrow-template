@@ -16,7 +16,7 @@ export type EscrowPreviewData = {
   engagementReference: string;
 };
 
-function PartyCard({
+const PartyCard = ({
   role,
   name,
   tag,
@@ -26,7 +26,7 @@ function PartyCard({
   name: string;
   tag: string;
   accent: "payer" | "payee";
-}) {
+}) => {
   return (
     <div className="flex-1 rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-950">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
@@ -46,9 +46,9 @@ function PartyCard({
       </span>
     </div>
   );
-}
+};
 
-function Row({
+const Row = ({
   label,
   value,
   strong,
@@ -56,7 +56,7 @@ function Row({
   label: string;
   value: string;
   strong?: boolean;
-}) {
+}) => {
   return (
     <div className="flex items-baseline justify-between gap-4">
       <span className="text-xs text-neutral-500 dark:text-neutral-400">
@@ -73,9 +73,9 @@ function Row({
       </span>
     </div>
   );
-}
+};
 
-export function EscrowPreview({ data }: { data: EscrowPreviewData }) {
+export const EscrowPreview = ({ data }: { data: EscrowPreviewData }) => {
   const copy = getDirectionCopy(data.direction);
   const amountLabel = formatAsset(data.amount, data.asset);
 
@@ -153,4 +153,4 @@ export function EscrowPreview({ data }: { data: EscrowPreviewData }) {
       </div>
     </div>
   );
-}
+};

@@ -14,7 +14,11 @@ const ICONS: Record<PaymentDirection, typeof ArrowDownLeft> = {
   payable: ArrowUpRight,
 };
 
-export function DirectionField({ value, onChange, name }: DirectionFieldProps) {
+export const DirectionField = ({
+  value,
+  onChange,
+  name,
+}: DirectionFieldProps) => {
   return (
     <div
       role="radiogroup"
@@ -70,4 +74,4 @@ export function DirectionField({ value, onChange, name }: DirectionFieldProps) {
       })}
     </div>
   );
-}
+};

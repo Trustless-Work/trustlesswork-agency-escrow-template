@@ -19,7 +19,10 @@ type CreateSuccessProps = {
   onCreateAnother: () => void;
 };
 
-export function CreateSuccess({ escrow, onCreateAnother }: CreateSuccessProps) {
+export const CreateSuccess = ({
+  escrow,
+  onCreateAnother,
+}: CreateSuccessProps) => {
   const [copied, setCopied] = useState(false);
   const copy = getDirectionCopy(escrow.paymentDirection);
   const { payer, payee } = getPaymentParties(
@@ -138,4 +141,4 @@ export function CreateSuccess({ escrow, onCreateAnother }: CreateSuccessProps) {
       </div>
     </div>
   );
-}
+};
