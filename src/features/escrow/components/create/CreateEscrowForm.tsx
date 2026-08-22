@@ -629,7 +629,7 @@ export const CreateEscrowForm = ({
                 </>
               ) : (
                 <>
-                  Create escrow
+                  {copy.submitLabel}
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </>
               )}

@@ -81,6 +81,8 @@ export type DirectionCopy = {
   deliverableDescription: string;
   acceptanceLabel: string;
   acceptanceHint: string;
+  /** Submit button label. */
+  submitLabel: string;
   /** Preview: role tag under each party. */
   payerRoleTag: string;
   payeeRoleTag: string;
@@ -116,6 +118,7 @@ const COPY: Record<PaymentDirection, DirectionCopy> = {
     acceptanceLabel: "Acceptance criteria",
     acceptanceHint:
       "What must be true before the client can approve and release payment.",
+    submitLabel: "Create escrow to get paid",
     payerRoleTag: "Funds & approves",
     payeeRoleTag: "Delivers & gets paid",
     summary: ({ payer, payee, amount }) =>
@@ -142,6 +145,7 @@ const COPY: Record<PaymentDirection, DirectionCopy> = {
     acceptanceLabel: "Acceptance criteria",
     acceptanceHint:
       "What must be true before you can approve and release payment.",
+    submitLabel: "Create escrow to send payment",
     payerRoleTag: "Funds & approves",
     payeeRoleTag: "Delivers & gets paid",
     summary: ({ payer, payee, amount }) =>
