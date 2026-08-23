@@ -1,8 +1,6 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -25,12 +23,7 @@ import type { SubmitDeliverableInput } from '@/types/agency-escrow'
 import { DeliverableLinksField } from './DeliverableLinksField'
 import { Textarea } from './Textarea'
 import type { SubmissionMode } from './submission-access'
-import {
-  emptySubmitWorkFormValues,
-  submitWorkFormSchema,
-  toSubmitDeliverableInput,
-  type SubmitWorkFormValues,
-} from './submit-work-form-schema'
+import { useSubmitWorkForm } from './use-submit-work-form'
 
 type SubmitWorkFormProps = {
   mode: SubmissionMode
@@ -59,22 +52,14 @@ const COPY: Record<
   },
 }
 
-export function SubmitWorkForm({
+export const SubmitWorkForm = ({
   mode,
   isPending,
   errorMessage,
   onSubmit,
-}: SubmitWorkFormProps) {
+}: SubmitWorkFormProps) => {
   const copy = COPY[mode]
-  const form = useForm<SubmitWorkFormValues>({
-    resolver: zodResolver(submitWorkFormSchema),
-    defaultValues: emptySubmitWorkFormValues,
-    mode: 'onSubmit',
-  })
-
-  const handleSubmit = form.handleSubmit((values) => {
-    onSubmit(toSubmitDeliverableInput(values))
-  })
+  const { form, handleSubmit } = useSubmitWorkForm({ onSubmit })
 
   return (
     <Card>

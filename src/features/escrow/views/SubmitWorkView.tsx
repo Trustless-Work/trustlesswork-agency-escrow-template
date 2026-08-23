@@ -24,13 +24,13 @@ type SubmitWorkViewProps = {
   escrowId: string
 }
 
-function PageShell({
+const PageShell = ({
   escrowId,
   children,
 }: {
   escrowId: string
   children: React.ReactNode
-}) {
+}) => {
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-8 sm:py-10">
       <div className="mx-auto w-full max-w-5xl">
@@ -54,7 +54,7 @@ function PageShell({
   )
 }
 
-function LoadingState() {
+const LoadingState = () => {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <Card>

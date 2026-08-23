@@ -17,10 +17,10 @@ type DeliverableLinksFieldProps = {
   disabled?: boolean
 }
 
-export function DeliverableLinksField({
+export const DeliverableLinksField = ({
   control,
   disabled,
-}: DeliverableLinksFieldProps) {
+}: DeliverableLinksFieldProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'deliverableLinks',

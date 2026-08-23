@@ -6,10 +6,10 @@ type RevisionRequestNoticeProps = {
   requestedAt?: string
 }
 
-export function RevisionRequestNotice({
+export const RevisionRequestNotice = ({
   revisionNotes,
   requestedAt,
-}: RevisionRequestNoticeProps) {
+}: RevisionRequestNoticeProps) => {
   const requestedOn = formatDate(requestedAt)
 
   return (

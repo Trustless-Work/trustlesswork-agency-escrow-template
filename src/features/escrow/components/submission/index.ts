@@ -12,6 +12,7 @@ export {
   type SubmissionAccess,
   type SubmissionMode,
 } from './submission-access'
+export { useSubmitWorkForm } from './use-submit-work-form'
 export {
   submitWorkFormSchema,
   toSubmitDeliverableInput,

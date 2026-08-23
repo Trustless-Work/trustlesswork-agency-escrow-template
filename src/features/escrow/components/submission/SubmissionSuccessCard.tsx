@@ -16,11 +16,11 @@ type SubmissionSuccessCardProps = {
   approverName: string
 }
 
-export function SubmissionSuccessCard({
+export const SubmissionSuccessCard = ({
   escrowId,
   mode,
   approverName,
-}: SubmissionSuccessCardProps) {
+}: SubmissionSuccessCardProps) => {
   return (
     <Card role="status">
       <CardHeader>

@@ -17,7 +17,7 @@ type SubmissionSummaryCardProps = {
   escrow: AgencyEscrow
 }
 
-function Row({ label, value }: { label: string; value: ReactNode }) {
+const Row = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border py-2 last:border-b-0">
       <dt className="text-sm text-muted-foreground">{label}</dt>
@@ -26,7 +26,7 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
   )
 }
 
-export function SubmissionSummaryCard({ escrow }: SubmissionSummaryCardProps) {
+export const SubmissionSummaryCard = ({ escrow }: SubmissionSummaryCardProps) => {
   const { payer } = getPaymentParties(
     escrow.paymentDirection,
     escrow.workspace,

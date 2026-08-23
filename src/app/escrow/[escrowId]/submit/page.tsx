@@ -6,8 +6,10 @@ type SubmitWorkPageProps = {
   }>;
 };
 
-export default async function SubmitWorkPage({ params }: SubmitWorkPageProps) {
+const SubmitWorkPage = async ({ params }: SubmitWorkPageProps) => {
   const { escrowId } = await params;
 
   return <SubmitWorkView escrowId={escrowId} />;
-}
+};
+
+export default SubmitWorkPage;

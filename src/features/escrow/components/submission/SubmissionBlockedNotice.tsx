@@ -14,11 +14,11 @@ type SubmissionBlockedNoticeProps = {
   description: string
 }
 
-export function SubmissionBlockedNotice({
+export const SubmissionBlockedNotice = ({
   escrowId,
   title,
   description,
-}: SubmissionBlockedNoticeProps) {
+}: SubmissionBlockedNoticeProps) => {
   return (
     <Card role="alert">
       <CardHeader>

@@ -23,9 +23,19 @@ export function formatStatus(status: AgencyEscrowStatus): string {
   return STATUS_LABELS[status]
 }
 
+const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/
+
+/**
+ * Date-only values such as `dueDate` are calendar dates, not instants. Parsing
+ * them with `new Date('2026-08-30')` yields UTC midnight, which renders as the
+ * previous day in western time zones, so they are parsed as local midnight
+ * instead. Full ISO timestamps stay instants.
+ */
 export function formatDate(value?: string): string | null {
   if (!value) return null
-  const parsed = new Date(value)
+  const parsed = DATE_ONLY_PATTERN.test(value)
+    ? new Date(`${value}T00:00:00`)
+    : new Date(value)
   if (Number.isNaN(parsed.getTime())) return null
 
   return new Intl.DateTimeFormat('en-US', {

@@ -11,9 +11,9 @@ type AcceptanceCriteriaCardProps = {
   milestone: AgencyEscrowMilestone
 }
 
-export function AcceptanceCriteriaCard({
+export const AcceptanceCriteriaCard = ({
   milestone,
-}: AcceptanceCriteriaCardProps) {
+}: AcceptanceCriteriaCardProps) => {
   return (
     <Card>
       <CardHeader>
