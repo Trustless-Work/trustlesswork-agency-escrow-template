@@ -7,7 +7,12 @@ import {
 import { getPaymentParties } from "@/features/escrow/utils/roles";
 import type { AgencyEscrow, AgencyEscrowParty } from "@/types/agency-escrow";
 import { WalletAddress } from "./WalletAddress";
-import { viewerCardClass, viewerLabelClass, viewerMutedClass } from "./viewer-styles";
+import {
+  viewerCardClass,
+  viewerLabelClass,
+  viewerMutedClass,
+  viewerTitleClass,
+} from "./viewer-styles";
 
 type EscrowPartiesCardProps = {
   escrow: AgencyEscrow;
@@ -23,10 +28,10 @@ const PartyRow = ({
   return (
     <div>
       <p className={viewerLabelClass}>{label}</p>
-      <p className="mt-1 font-semibold">
-        {party.name}
-      </p>
-      {party.email ? <p className={viewerMutedClass}>{party.email}</p> : null}
+      <p className="mt-1 font-medium text-white">{party.name}</p>
+      {party.email ? (
+        <p className={viewerMutedClass}>{party.email}</p>
+      ) : null}
       <WalletAddress address={party.walletAddress} />
     </div>
   );
@@ -42,7 +47,7 @@ export const EscrowPartiesCard = ({ escrow }: EscrowPartiesCardProps) => {
   return (
     <Card className={viewerCardClass}>
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Parties</CardTitle>
+        <CardTitle className={viewerTitleClass}>Parties</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <PartyRow

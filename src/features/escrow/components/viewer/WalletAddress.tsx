@@ -6,7 +6,7 @@ type WalletAddressProps = {
 
 export const WalletAddress = ({ address }: WalletAddressProps) => {
   return (
-    <span className="font-mono text-xs text-gray-500" title={address}>
+    <span className="font-mono text-xs text-slate-500" title={address}>
       {formatWalletAddress(address)}
     </span>
   );

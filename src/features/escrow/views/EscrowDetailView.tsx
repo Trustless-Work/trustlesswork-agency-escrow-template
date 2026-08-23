@@ -14,16 +14,14 @@ import { EscrowPartiesCard } from "@/features/escrow/components/viewer/EscrowPar
 import { EscrowPaymentCard } from "@/features/escrow/components/viewer/EscrowPaymentCard";
 import { EscrowTermsCard } from "@/features/escrow/components/viewer/EscrowTermsCard";
 import { ViewerShell } from "@/features/escrow/components/viewer/ViewerShell";
-import { viewerLinkClass } from "@/features/escrow/components/viewer/viewer-styles";
+import { viewerBackLinkClass } from "@/features/escrow/components/viewer/viewer-styles";
 import { useAgencyEscrow, useEscrowActivity } from "@/features/escrow/hooks";
-import { useWallet } from "@/lib/wallet-provider";
 
 type EscrowDetailViewProps = {
   escrowId: string;
 };
 
 export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
-  const { address } = useWallet();
   const escrowQuery = useAgencyEscrow(escrowId);
   const activityQuery = useEscrowActivity(escrowId);
 
@@ -40,32 +38,31 @@ export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
     return <EscrowNotFound escrowId={escrowId} />;
   }
 
-  const nextAction = getViewerNextAction(escrow, address);
+  const nextAction = getViewerNextAction(escrow);
 
   return (
     <ViewerShell>
-      <div className="flex flex-col gap-8">
-        <Link href="/agency" className={viewerLinkClass}>
-          ← Back to dashboard
-        </Link>
+      <Link href="/agency" className={viewerBackLinkClass}>
+        ← Back to dashboard
+      </Link>
 
-        <EscrowDetailHeader escrow={escrow} />
-        <EscrowNextActions action={nextAction} />
+      <EscrowDetailHeader escrow={escrow} />
+      <EscrowNextActions action={nextAction} />
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)]">
-          <EscrowTermsCard escrow={escrow} />
-          <div className="flex flex-col gap-6">
-            <EscrowPaymentCard escrow={escrow} />
-            <EscrowPartiesCard escrow={escrow} />
-          </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <EscrowTermsCard escrow={escrow} />
+        <div className="flex flex-col gap-6">
+          <EscrowPaymentCard escrow={escrow} />
+          <EscrowPartiesCard escrow={escrow} />
         </div>
-
-        <EscrowActivityTimeline
-          escrow={escrow}
-          events={activityQuery.data}
-          isLoading={activityQuery.isPending}
-        />
       </div>
+
+      <EscrowActivityTimeline
+        escrow={escrow}
+        events={activityQuery.data}
+        isLoading={activityQuery.isPending}
+        isError={activityQuery.isError}
+      />
     </ViewerShell>
   );
 };

@@ -1,8 +1,12 @@
-import { getAvailableActions, getPaymentParties } from "@/features/escrow/utils/roles";
+import {
+  getAvailableActions,
+  getPaymentParties,
+} from "@/features/escrow/utils/roles";
 import type {
   AgencyEscrow,
   AgencyEscrowAction,
   AgencyEscrowParty,
+  AgencyEscrowStatus,
 } from "@/types/agency-escrow";
 
 export type ViewerNextActionKey = "fund" | "submit" | "review" | "release";
@@ -12,16 +16,17 @@ export type ViewerNextAction = {
   href: string;
   label: string;
   description: string;
-  waitingOn: AgencyEscrowParty;
   availableToViewer: boolean;
 };
 
-const ACTION_KEY: Record<AgencyEscrowAction, ViewerNextActionKey> = {
-  fund: "fund",
-  submit: "submit",
-  approve: "review",
-  request_changes: "review",
-  release: "release",
+const STATUS_NEXT_ACTION: Partial<
+  Record<AgencyEscrowStatus, ViewerNextActionKey>
+> = {
+  created: "fund",
+  funded: "submit",
+  revision_requested: "submit",
+  in_review: "review",
+  approved: "release",
 };
 
 const ACTION_HREF: Record<ViewerNextActionKey, (escrowId: string) => string> = {
@@ -31,7 +36,15 @@ const ACTION_HREF: Record<ViewerNextActionKey, (escrowId: string) => string> = {
   release: (escrowId) => `/escrow/${escrowId}/release`,
 };
 
-function actionActor(
+const ACTION_TO_KEY: Record<AgencyEscrowAction, ViewerNextActionKey> = {
+  fund: "fund",
+  submit: "submit",
+  approve: "review",
+  request_changes: "review",
+  release: "release",
+};
+
+function partyForAction(
   key: ViewerNextActionKey,
   payer: AgencyEscrowParty,
   payee: AgencyEscrowParty,
@@ -84,32 +97,24 @@ function actionCopy(
 
 export function getViewerNextAction(
   escrow: AgencyEscrow,
-  viewerAddress: string | null | undefined,
 ): ViewerNextAction | null {
+  const key = STATUS_NEXT_ACTION[escrow.status];
+  if (!key) return null;
+
   const { payer, payee } = getPaymentParties(
     escrow.paymentDirection,
     escrow.workspace,
     escrow.counterparty,
   );
-
-  const statusActions = [
-    ...getAvailableActions(escrow, payer.walletAddress),
-    ...getAvailableActions(escrow, payee.walletAddress),
-  ];
-
-  const firstAction = statusActions[0];
-  if (!firstAction) return null;
-
-  const key = ACTION_KEY[firstAction];
-  const waitingOn = actionActor(key, payer, payee);
-  const availableToViewer = getAvailableActions(escrow, viewerAddress).some(
-    (action) => ACTION_KEY[action] === key,
-  );
+  const waitingOn = partyForAction(key, payer, payee);
+  const availableToViewer = getAvailableActions(
+    escrow,
+    escrow.workspace.walletAddress,
+  ).some((action) => ACTION_TO_KEY[action] === key);
 
   return {
     key,
     href: ACTION_HREF[key](escrow.escrowId),
-    waitingOn,
     availableToViewer,
     ...actionCopy(
       key,

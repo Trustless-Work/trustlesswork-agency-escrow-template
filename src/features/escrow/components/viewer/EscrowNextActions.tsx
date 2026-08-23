@@ -9,10 +9,11 @@ import {
 import { cn } from "@/lib/utils";
 import type { ViewerNextAction } from "./next-actions";
 import {
-  viewerButtonClass,
   viewerCardClass,
   viewerMutedClass,
   viewerOutlineButtonClass,
+  viewerPrimaryButtonClass,
+  viewerTitleClass,
 } from "./viewer-styles";
 
 type EscrowNextActionsProps = {
@@ -24,7 +25,7 @@ export const EscrowNextActions = ({ action }: EscrowNextActionsProps) => {
     return (
       <Card className={viewerCardClass}>
         <CardHeader>
-          <CardTitle className="text-lg font-bold">Next step</CardTitle>
+          <CardTitle className={viewerTitleClass}>Next step</CardTitle>
           <CardDescription className={viewerMutedClass}>
             This payment is complete. No further action is required.
           </CardDescription>
@@ -36,7 +37,7 @@ export const EscrowNextActions = ({ action }: EscrowNextActionsProps) => {
   return (
     <Card className={viewerCardClass}>
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Next step</CardTitle>
+        <CardTitle className={viewerTitleClass}>Next step</CardTitle>
         <CardDescription className={viewerMutedClass}>
           {action.description}
         </CardDescription>
@@ -46,12 +47,11 @@ export const EscrowNextActions = ({ action }: EscrowNextActionsProps) => {
           href={action.href}
           className={cn(
             action.availableToViewer
-              ? viewerButtonClass
+              ? viewerPrimaryButtonClass
               : viewerOutlineButtonClass,
           )}
         >
           {action.label}
-          <span aria-hidden="true">→</span>
         </Link>
       </CardContent>
     </Card>

@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import type { AgencyEscrow } from "@/types/agency-escrow";
 import { formatDueDate } from "./format";
 import {
@@ -13,6 +12,7 @@ import {
   viewerLabelClass,
   viewerLinkClass,
   viewerMutedClass,
+  viewerTitleClass,
 } from "./viewer-styles";
 
 type EscrowTermsCardProps = {
@@ -25,35 +25,33 @@ export const EscrowTermsCard = ({ escrow }: EscrowTermsCardProps) => {
   return (
     <Card className={viewerCardClass}>
       <CardHeader>
-        <CardTitle className="text-lg font-bold">
+        <CardTitle className={viewerTitleClass}>
           Agreement and deliverable
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-6 text-sm leading-6">
         <section>
-          <h3 className={viewerLabelClass}>Description</h3>
-          <p className={cn("mt-1", viewerMutedClass)}>{agreement.description}</p>
+          <p className={viewerLabelClass}>Description</p>
+          <p className={`mt-1 ${viewerMutedClass}`}>{agreement.description}</p>
         </section>
 
         <section>
-          <h3 className={viewerLabelClass}>Deliverable</h3>
-          <p className="mt-1 font-semibold">
-            {milestone.title}
-          </p>
-          <p className={cn("mt-1", viewerMutedClass)}>{milestone.description}</p>
+          <p className={viewerLabelClass}>Deliverable</p>
+          <p className="mt-1 font-medium text-white">{milestone.title}</p>
+          <p className={`mt-1 ${viewerMutedClass}`}>{milestone.description}</p>
         </section>
 
         <section>
-          <h3 className={viewerLabelClass}>Acceptance criteria</h3>
-          <p className={cn("mt-1", viewerMutedClass)}>
+          <p className={viewerLabelClass}>Acceptance criteria</p>
+          <p className={`mt-1 ${viewerMutedClass}`}>
             {milestone.acceptanceCriteria}
           </p>
         </section>
 
         {agreement.dueDate ? (
           <section>
-            <h3 className={viewerLabelClass}>Due date</h3>
-            <p className={cn("mt-1", viewerMutedClass)}>
+            <p className={viewerLabelClass}>Due date</p>
+            <p className={`mt-1 ${viewerMutedClass}`}>
               {formatDueDate(agreement.dueDate)}
             </p>
           </section>
@@ -61,12 +59,12 @@ export const EscrowTermsCard = ({ escrow }: EscrowTermsCardProps) => {
 
         {agreement.agreementUrl ? (
           <section>
-            <h3 className={viewerLabelClass}>Agreement</h3>
+            <p className={viewerLabelClass}>Agreement</p>
             <a
               href={agreement.agreementUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(viewerLinkClass, "mt-1")}
+              className={`mt-1 ${viewerLinkClass}`}
             >
               View proposal
               <ExternalLinkIcon className="size-3.5" aria-hidden="true" />
@@ -74,19 +72,33 @@ export const EscrowTermsCard = ({ escrow }: EscrowTermsCardProps) => {
           </section>
         ) : null}
 
-        {milestone.deliverySummary ? (
+        {milestone.deliverySummary || milestone.deliverableLinks?.length ? (
           <section>
-            <h3 className={viewerLabelClass}>Latest delivery</h3>
-            <p className={cn("mt-1", viewerMutedClass)}>
-              {milestone.deliverySummary}
-            </p>
+            <p className={viewerLabelClass}>Latest delivery</p>
+            {milestone.deliverySummary ? (
+              <p className={`mt-1 ${viewerMutedClass}`}>
+                {milestone.deliverySummary}
+              </p>
+            ) : null}
+            {milestone.deliverableLinks?.map((href) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`mt-1 ${viewerLinkClass}`}
+              >
+                View deliverable
+                <ExternalLinkIcon className="size-3.5" aria-hidden="true" />
+              </a>
+            ))}
           </section>
         ) : null}
 
         {milestone.revisionNotes ? (
           <section>
-            <h3 className={viewerLabelClass}>Requested changes</h3>
-            <p className={cn("mt-1", viewerMutedClass)}>
+            <p className={viewerLabelClass}>Requested changes</p>
+            <p className={`mt-1 ${viewerMutedClass}`}>
               {milestone.revisionNotes}
             </p>
           </section>
