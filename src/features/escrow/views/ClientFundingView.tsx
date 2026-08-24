@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -153,10 +154,7 @@ export const ClientFundingView = ({ escrowId }: ClientFundingViewProps) => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link
-                  href={`/escrow/${escrowId}`}
-                  className={buttonVariants()}
-                >
+                <Link href={`/escrow/${escrowId}`} className={buttonVariants()}>
                   View escrow
                 </Link>
               </CardContent>
@@ -229,7 +227,7 @@ const FundingShell = ({
   children,
 }: {
   escrowId: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => (
   <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
     <section className="mx-auto w-full max-w-2xl">
