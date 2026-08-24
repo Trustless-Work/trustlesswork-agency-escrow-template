@@ -64,7 +64,7 @@ export const SubmissionSummaryCard = ({ escrow }: SubmissionSummaryCardProps) =>
               <span>
                 {serviceProvider.party.name}
                 <span className="ml-2 text-xs font-normal text-muted-foreground">
-                  service provider &middot; {serviceProvider.side}
+                  service provider
                 </span>
               </span>
             }
@@ -89,7 +89,7 @@ export const SubmissionSummaryCard = ({ escrow }: SubmissionSummaryCardProps) =>
             value={`- ${formatAmount(fee.platformFeeAmount, escrow.payment.asset)}`}
           />
           <Row
-            label="You receive on approval"
+            label="You receive when payment is released"
             value={formatAmount(fee.netAmount, escrow.payment.asset)}
           />
           {dueDate ? <Row label="Due date" value={dueDate} /> : null}
