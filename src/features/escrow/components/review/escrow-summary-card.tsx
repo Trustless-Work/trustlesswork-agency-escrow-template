@@ -31,6 +31,84 @@ function MetaRow({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+function CopyAddressPill({
+  address,
+  copied,
+  onCopy,
+  disabled,
+}: {
+  address: string;
+  copied: boolean;
+  onCopy: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative inline-flex max-w-full flex-wrap items-center gap-1 overflow-hidden rounded-full bg-[#f7f7f7] p-1",
+        copied && "justify-center",
+      )}
+      style={{ borderRadius: 56 }}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 bg-[#f2f2f2] transition-all duration-500 ease-out"
+        style={{ width: copied ? "100%" : "0%", borderRadius: 56 }}
+      />
+      <span className="relative grid place-items-center justify-center px-2" style={{ minWidth: 110 }}>
+        <span
+          className="col-start-1 row-start-1 whitespace-nowrap font-mono text-sm font-semibold tracking-tight transition-all duration-300"
+          style={{
+            color: "#aaaaaa",
+            opacity: copied ? 0 : 1,
+            transform: copied ? "translateX(-8px)" : "translateX(0)",
+            willChange: "transform",
+          }}
+        >
+          {shortenAddress(address)}
+        </span>
+        <span
+          className="col-start-1 row-start-1 inline-flex items-center translate-x-8 gap-1.5 whitespace-nowrap font-mono text-base font-semibold tracking-tight transition-all duration-300"
+          style={{
+            color: "#171717",
+            opacity: copied ? 1 : 0,
+            transform: copied ? "translateX(0)" : "translateX(8px)",
+            willChange: "transform",
+          }}
+          aria-hidden
+        >
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+            <svg
+              viewBox="0 0 12 9"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-2.5 w-2.5"
+              aria-hidden
+            >
+              <path d="M1 4.5 4.5 8 11 1" />
+            </svg>
+          </span>
+          Copied!
+        </span>
+      </span>
+      <button
+        type="button"
+        onClick={onCopy}
+        disabled={disabled}
+        aria-label={`Copy wallet address ${address}`}
+        className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full border bg-[#fefefe] px-3 text-xs font-medium text-neutral-700 shadow-sm transition-all duration-300 ease-out hover:bg-white"
+      >
+        Copy
+      </button>
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? "Wallet address copied to clipboard." : ""}
+      </span>
+    </div>
+  );
+}
+
 function PartyMeta({ party }: { party: AgencyEscrowParty }) {
   const [copied, setCopied] = useState(false);
 
@@ -47,71 +125,11 @@ function PartyMeta({ party }: { party: AgencyEscrowParty }) {
   return (
     <div className="flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-1.5 sm:flex-col sm:items-start sm:justify-start sm:gap-y-1.5 sm:gap-x-0">
       <p className="shrink-0 text-sm font-medium text-neutral-900">{party.name}</p>
-      <div
-        className={cn(
-          "relative inline-flex max-w-full flex-wrap items-center gap-1 overflow-hidden rounded-full bg-[#f7f7f7] p-1",
-          copied && "justify-center",
-        )}
-        style={{ borderRadius: 56 }}
-      >
-        <div
-          className="pointer-events-none absolute inset-0 bg-[#f2f2f2] transition-all duration-500 ease-out"
-          style={{
-            width: copied ? "100%" : "0%",
-            borderRadius: 56,
-          }}
-        />
-        <span className="relative grid place-items-center justify-center px-2" style={{ minWidth: 110 }}>
-          <span
-            className="col-start-1 row-start-1 whitespace-nowrap font-mono text-sm font-semibold tracking-tight transition-all duration-300"
-            style={{
-              color: "#aaaaaa",
-              opacity: copied ? 0 : 1,
-              transform: copied ? "translateX(-8px)" : "translateX(0)",
-              willChange: "transform",
-            }}
-          >
-            {shortenAddress(party.walletAddress)}
-          </span>
-          <span
-            className="col-start-1 row-start-1 inline-flex items-center translate-x-8 gap-1.5 whitespace-nowrap font-mono text-base font-semibold tracking-tight transition-all duration-300"
-            style={{
-              color: "#171717",
-              opacity: copied ? 1 : 0,
-              transform: copied ? "translateX(0)" : "translateX(8px)",
-              willChange: "transform",
-            }}
-            aria-hidden
-          >
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
-              <svg
-                viewBox="0 0 12 9"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-2.5 w-2.5"
-                aria-hidden
-              >
-                <path d="M1 4.5 4.5 8 11 1" />
-              </svg>
-            </span>
-            Copied!
-          </span>
-        </span>
-        <button
-          type="button"
-          onClick={handleCopy}
-          aria-label="Copy wallet address"
-          className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full border bg-[#fefefe] px-3 text-xs font-medium text-neutral-700 shadow-sm transition-all duration-300 ease-out hover:bg-white"
-        >
-          Copy
-        </button>
-        <span role="status" aria-live="polite" className="sr-only">
-          {copied ? "Wallet address copied to clipboard." : ""}
-        </span>
-      </div>
+      <CopyAddressPill
+        address={party.walletAddress}
+        copied={copied}
+        onCopy={handleCopy}
+      />
     </div>
   );
 }
