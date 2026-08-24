@@ -16,6 +16,7 @@ import { EscrowTermsCard } from "@/features/escrow/components/viewer/EscrowTerms
 import { ViewerShell } from "@/features/escrow/components/viewer/ViewerShell";
 import { viewerBackLinkClass } from "@/features/escrow/components/viewer/viewer-styles";
 import { useAgencyEscrow, useEscrowActivity } from "@/features/escrow/hooks";
+import { useWallet } from "@/lib/wallet-provider";
 
 type EscrowDetailViewProps = {
   escrowId: string;
@@ -24,6 +25,7 @@ type EscrowDetailViewProps = {
 export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
   const escrowQuery = useAgencyEscrow(escrowId);
   const activityQuery = useEscrowActivity(escrowId);
+  const { address } = useWallet();
 
   if (escrowQuery.isPending) {
     return <EscrowDetailSkeleton />;
@@ -38,7 +40,7 @@ export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
     return <EscrowNotFound escrowId={escrowId} />;
   }
 
-  const nextAction = getViewerNextAction(escrow);
+  const nextAction = getViewerNextAction(escrow, address);
 
   return (
     <ViewerShell>

@@ -33,8 +33,8 @@ export const EscrowActivityTimeline = ({
   isError,
 }: EscrowActivityTimelineProps) => {
   const parties = [escrow.workspace, escrow.counterparty];
-  const timeline = [...(events ?? [])].sort((a, b) =>
-    a.timestamp.localeCompare(b.timestamp),
+  const timeline = [...(events ?? [])].sort(
+    (a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp),
   );
 
   return (
