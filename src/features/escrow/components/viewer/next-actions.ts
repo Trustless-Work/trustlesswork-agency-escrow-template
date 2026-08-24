@@ -97,6 +97,7 @@ function actionCopy(
 
 export function getViewerNextAction(
   escrow: AgencyEscrow,
+  viewerAddress?: string,
 ): ViewerNextAction | null {
   const key = STATUS_NEXT_ACTION[escrow.status];
   if (!key) return null;
@@ -107,10 +108,11 @@ export function getViewerNextAction(
     escrow.counterparty,
   );
   const waitingOn = partyForAction(key, payer, payee);
-  const availableToViewer = getAvailableActions(
-    escrow,
-    escrow.workspace.walletAddress,
-  ).some((action) => ACTION_TO_KEY[action] === key);
+  const availableToViewer = viewerAddress
+    ? getAvailableActions(escrow, viewerAddress).some(
+        (action) => ACTION_TO_KEY[action] === key,
+      )
+    : false;
 
   return {
     key,
