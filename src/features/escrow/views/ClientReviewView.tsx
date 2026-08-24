@@ -65,12 +65,11 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
     hasBanner,
   } = useReviewFlow(escrowId);
 
-  const guardVariant: "loading" | "error" | "not_found" =
-    isLoading && !isError
+  const guardVariant: "loading" | "error" | "not_found" = isError
+    ? "error"
+    : isLoading
       ? "loading"
-      : isError
-        ? "error"
-        : "not_found";
+      : "not_found";
 
   return (
     <main className="min-h-screen bg-neutral-50 px-4 py-10 text-neutral-950 sm:px-6 lg:px-8">

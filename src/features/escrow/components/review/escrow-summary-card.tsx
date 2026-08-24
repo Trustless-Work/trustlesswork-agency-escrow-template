@@ -98,7 +98,12 @@ function CopyAddressPill({
         onClick={onCopy}
         disabled={disabled}
         aria-label={`Copy wallet address ${address}`}
-        className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full border bg-[#fefefe] px-3 text-xs font-medium text-neutral-700 shadow-sm transition-all duration-300 ease-out hover:bg-white"
+        className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#fefefe] px-3 text-xs font-medium text-neutral-700 transition-all duration-300 ease-out"
+        style={{
+          opacity: copied ? 0 : 1,
+          transform: copied ? "scale(0.9)" : "scale(1)",
+          pointerEvents: copied ? "none" : "auto",
+        }}
       >
         Copy
       </button>
