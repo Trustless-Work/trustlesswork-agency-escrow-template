@@ -65,6 +65,13 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
     hasBanner,
   } = useReviewFlow(escrowId);
 
+  const guardVariant: "loading" | "error" | "not_found" =
+    isLoading && !isError
+      ? "loading"
+      : isError
+        ? "error"
+        : "not_found";
+
   return (
     <main className="min-h-screen bg-neutral-50 px-4 py-10 text-neutral-950 sm:px-6 lg:px-8">
       <style>{REVIEW_MOTION_CSS}</style>
@@ -78,15 +85,7 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
               <ArrowLeft aria-hidden className="h-3 w-3" />
               Back
             </Link>
-            <GuardPanel
-              variant={
-                isLoading && !isError
-                  ? "loading"
-                  : isError
-                    ? "error"
-                    : "not_found"
-              }
-            />
+            <GuardPanel variant={guardVariant} />
           </>
         ) : (
           <div className="rv-fade-up space-y-6">
