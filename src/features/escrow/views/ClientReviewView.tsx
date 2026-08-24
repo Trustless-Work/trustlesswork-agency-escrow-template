@@ -9,10 +9,7 @@ import { GuardPanel } from "@/features/escrow/components/review/guard-panel";
 import { MockActorSwitcher } from "@/features/escrow/components/review/mock-actor-switcher";
 import { ResultBanner } from "@/features/escrow/components/review/result-banner";
 import { ReviewHeader } from "@/features/escrow/components/review/review-header";
-import {
-  ApproverEmptySubmissions,
-  ProviderSubmissionGate,
-} from "@/features/escrow/components/review/submission-gate";
+import { ApproverEmptySubmissions } from "@/features/escrow/components/review/submission-gate";
 import { useReviewFlow } from "@/features/escrow/components/review/use-review-flow";
 
 type ClientReviewViewProps = {
@@ -55,10 +52,8 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
     requestChangesPending,
     handleApprove,
     handleRequestChanges,
-    handleSubmitDeliverable,
     showWrongStatus,
     showFundedGate,
-    showResubmitGate,
     showProviderWaiting,
     showApproverWaiting,
     showUnauthorized,
@@ -113,12 +108,6 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
                 )}
               </div>
             )}
-
-              {(showFundedGate && viewerRole === "provider" || showResubmitGate) && (
-                <div className="pt-6">
-                  <ProviderSubmissionGate onSubmit={handleSubmitDeliverable} />
-                </div>
-              )}
 
               {showFundedGate && viewerRole !== "provider" && (
                 <div className="pt-6">

@@ -4,7 +4,6 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import type { AgencyEscrow, AgencyEscrowParty } from "@/types/agency-escrow";
 import { getPaymentParties } from "@/features/escrow/utils/roles";
-import { useWallet } from "@/lib/wallet-provider";
 import { cn } from "@/lib/utils";
 import { DeliverableLinks } from "./deliverable-links";
 import { formatAmount, formatDate, shortenAddress } from "./format";
@@ -14,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { ReviewCard } from "./review-card";
 import { ApproveConfirm } from "./approve-confirm";
 import { RevisionNotesForm } from "./revision-notes-form";
-import { CheckboxAnimated } from "./checkbox-animated";
 import {
   BodyText,
   MicroLabel,
@@ -214,10 +212,7 @@ export function EscrowSummarySections({
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
-  const [deliverableChecked, setDeliverableChecked] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
-  const { address } = useWallet();
-  const canToggle = address === escrow.roles.approver;
 
   return (
     <div className="space-y-6">
@@ -244,9 +239,7 @@ export function EscrowSummarySections({
             <div className="pt-4">
               <MicroLabel>Deliverable</MicroLabel>
             </div>
-            <CheckboxAnimated checked={deliverableChecked} onChange={setDeliverableChecked} disabled={!canToggle}>
-              <BodyText className="flex-1 py-1 leading-7">{milestone.description}</BodyText>
-            </CheckboxAnimated>
+            <BodyText className="leading-7">{milestone.description}</BodyText>
           </div>
         </div>
       </SummarySection>

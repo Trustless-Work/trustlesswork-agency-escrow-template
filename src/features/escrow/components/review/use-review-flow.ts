@@ -4,24 +4,17 @@ import { toast } from "sonner";
 import {
   useAgencyEscrow,
   useReviewDeliverable,
-  useSubmitDeliverable,
 } from "@/features/escrow/hooks";
 import { canActorPerformAction } from "@/features/escrow/utils/roles";
 import { useWallet } from "@/lib/wallet-provider";
 
 export type ReviewViewerRole = "approver" | "provider" | "other";
 
-type SubmitDeliverableValues = {
-  deliverySummary: string;
-  deliverableLinks: string[];
-};
-
 export function useReviewFlow(escrowId: string) {
   const { data: escrow, isLoading, isError } = useAgencyEscrow(escrowId);
   const { address, isMock } = useWallet();
   const { approve, requestChanges, approveMutation, requestChangesMutation } =
     useReviewDeliverable(escrowId);
-  const { mutateAsync: submitDeliverable } = useSubmitDeliverable(escrowId);
 
   const viewerRole: ReviewViewerRole = !escrow || !address
     ? ("other" as const)
@@ -70,32 +63,11 @@ export function useReviewFlow(escrowId: string) {
     }
   };
 
-  const handleSubmitDeliverable = async (values: SubmitDeliverableValues) => {
-    try {
-      await submitDeliverable({
-        deliverySummary: values.deliverySummary,
-        deliverableLinks: values.deliverableLinks,
-      });
-      toast.success("Submission sent", {
-        description: "The approver can now review your work.",
-      });
-      return true;
-    } catch (error) {
-      toast.error("Could not submit deliverable", {
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-      });
-      return false;
-    }
-  };
-
   const status = escrow?.status;
   const statusFlags = {
     showWrongStatus:
       status === "created" || status === "released" || status === "closed",
     showFundedGate: status === "funded",
-    showResubmitGate:
-      status === "revision_requested" && viewerRole === "provider",
     showProviderWaiting: status === "in_review" && viewerRole === "provider",
     showApproverWaiting:
       status === "in_review" && viewerRole === "approver" && canReview,
@@ -116,7 +88,6 @@ export function useReviewFlow(escrowId: string) {
     requestChangesPending: requestChangesMutation.isPending,
     handleApprove,
     handleRequestChanges,
-    handleSubmitDeliverable,
     ...statusFlags,
   };
 }
