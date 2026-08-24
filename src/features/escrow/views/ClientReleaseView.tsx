@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -47,7 +47,33 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
     );
   }
 
-  if (isError || !escrow) {
+  if (isError) {
+    return (
+      <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
+        <section className="mx-auto w-full max-w-2xl">
+          <BackLink escrowId={escrowId} />
+          <Card className="mt-8">
+            <CardHeader>
+              <CardTitle>We could not load this escrow</CardTitle>
+              <CardDescription>
+                Something went wrong while loading the payment details. Try again before assuming the escrow no longer exists.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link
+                href={`/escrow/${escrowId}/release`}
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Try again
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+      </main>
+    );
+  }
+
+  if (!escrow) {
     return (
       <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
         <section className="mx-auto w-full max-w-2xl">
