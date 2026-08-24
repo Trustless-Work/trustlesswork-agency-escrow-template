@@ -1,47 +1,70 @@
+"use client";
+
 import Link from "next/link";
+import { EscrowActivityTimeline } from "@/features/escrow/components/viewer/EscrowActivityTimeline";
+import { EscrowDetailHeader } from "@/features/escrow/components/viewer/EscrowDetailHeader";
+import {
+  EscrowDetailSkeleton,
+  EscrowLoadError,
+  EscrowNotFound,
+} from "@/features/escrow/components/viewer/EscrowDetailStates";
+import { EscrowNextActions } from "@/features/escrow/components/viewer/EscrowNextActions";
+import { getViewerNextAction } from "@/features/escrow/components/viewer/next-actions";
+import { EscrowPartiesCard } from "@/features/escrow/components/viewer/EscrowPartiesCard";
+import { EscrowPaymentCard } from "@/features/escrow/components/viewer/EscrowPaymentCard";
+import { EscrowTermsCard } from "@/features/escrow/components/viewer/EscrowTermsCard";
+import { ViewerShell } from "@/features/escrow/components/viewer/ViewerShell";
+import { viewerBackLinkClass } from "@/features/escrow/components/viewer/viewer-styles";
+import { useAgencyEscrow, useEscrowActivity } from "@/features/escrow/hooks";
+import { useWallet } from "@/lib/wallet-provider";
 
 type EscrowDetailViewProps = {
   escrowId: string;
 };
 
 export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
-  return (
-    <main className="min-h-screen bg-neutral-50 px-6 py-10 text-neutral-950 sm:px-10">
-      <section className="mx-auto w-full max-w-5xl">
-        <div className="border-b border-neutral-200 pb-8">
-          <p className="text-sm font-medium uppercase text-neutral-500">
-            Escrow Viewer
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-normal">
-            Escrow {escrowId}
-          </h1>
-          <p className="mt-3 max-w-2xl text-base leading-7 text-neutral-600">
-            Placeholder for the shared escrow status page with milestone terms,
-            roles, fee, timestamps, and transaction references.
-          </p>
-        </div>
+  const escrowQuery = useAgencyEscrow(escrowId);
+  const activityQuery = useEscrowActivity(escrowId);
+  const { address } = useWallet();
 
-        <nav className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href={`/escrow/${escrowId}/fund`}
-            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium transition-colors hover:border-neutral-950"
-          >
-            Funding
-          </Link>
-          <Link
-            href={`/escrow/${escrowId}/review`}
-            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium transition-colors hover:border-neutral-950"
-          >
-            Review
-          </Link>
-          <Link
-            href={`/escrow/${escrowId}/release`}
-            className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium transition-colors hover:border-neutral-950"
-          >
-            Release
-          </Link>
-        </nav>
-      </section>
-    </main>
+  if (escrowQuery.isPending) {
+    return <EscrowDetailSkeleton />;
+  }
+
+  if (escrowQuery.isError) {
+    return <EscrowLoadError />;
+  }
+
+  const escrow = escrowQuery.data;
+  if (!escrow) {
+    return <EscrowNotFound escrowId={escrowId} />;
+  }
+
+  const nextAction = getViewerNextAction(escrow, address);
+
+  return (
+    <ViewerShell>
+      <Link href="/agency" className={viewerBackLinkClass}>
+        ← Back to dashboard
+      </Link>
+
+      <EscrowDetailHeader escrow={escrow} />
+      <EscrowNextActions action={nextAction} />
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <EscrowTermsCard escrow={escrow} />
+        <div className="flex flex-col gap-6">
+          <EscrowPaymentCard escrow={escrow} />
+          <EscrowPartiesCard escrow={escrow} />
+        </div>
+      </div>
+
+      <EscrowActivityTimeline
+        escrow={escrow}
+        events={activityQuery.data}
+        isLoading={activityQuery.isPending}
+        isError={activityQuery.isError}
+      />
+    </ViewerShell>
   );
 };
