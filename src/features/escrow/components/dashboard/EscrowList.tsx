@@ -65,7 +65,7 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
                   </td>
                   <td className="px-4 py-4">
                     <Badge variant={isReceivable ? "secondary" : "default"}>
-                      {isReceivable ? "Receivable" : "Payable"}
+                      {isReceivable ? "Getting paid" : "Paying"}
                     </Badge>
                   </td>
                   <td className="whitespace-nowrap px-4 py-4 font-medium tabular-nums text-neutral-950">

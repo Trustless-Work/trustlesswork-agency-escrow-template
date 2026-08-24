@@ -12,6 +12,16 @@ export const STATUS_LABELS: Record<AgencyEscrowStatus, string> = {
   closed: "Closed",
 };
 
+export const STATUS_SORT_ORDER: Record<AgencyEscrowStatus, number> = {
+  revision_requested: 0,
+  created: 1,
+  funded: 2,
+  in_review: 3,
+  approved: 4,
+  released: 5,
+  closed: 6,
+};
+
 export function getEscrowNextStep(escrow: AgencyEscrow): string {
   if (escrow.paymentDirection === "receivable") {
     switch (escrow.status) {

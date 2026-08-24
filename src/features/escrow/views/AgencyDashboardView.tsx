@@ -7,7 +7,10 @@ import { EscrowList } from "@/features/escrow/components/dashboard/EscrowList";
 import { EscrowEmptyState } from "@/features/escrow/components/dashboard/EscrowEmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import type { SortOption } from "@/features/escrow/components/dashboard/escrow-dashboard-utils";
+import {
+  STATUS_SORT_ORDER,
+  type SortOption,
+} from "@/features/escrow/components/dashboard/escrow-dashboard-utils";
 
 const useAgencyDashboard = () => {
   const { data: escrows, isLoading, isError, error } = useAgencyEscrows();
@@ -22,7 +25,7 @@ const useAgencyDashboard = () => {
       return items;
     }
 
-    items.sort((a, b) => a.status.localeCompare(b.status));
+    items.sort((a, b) => STATUS_SORT_ORDER[a.status] - STATUS_SORT_ORDER[b.status]);
     return items;
   }, [escrows, sort]);
 
@@ -66,14 +69,9 @@ export const AgencyDashboardView = () => {
       <section className="mx-auto w-full max-w-6xl">
         <div className="flex flex-col gap-6 border-b border-neutral-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-medium uppercase text-neutral-500">
-              Agency
-            </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-normal">
-              Escrows
-            </h1>
+            <h1 className="text-3xl font-semibold tracking-normal">Escrows</h1>
             <p className="mt-3 max-w-2xl text-base leading-7 text-neutral-600">
-              Track milestone-based payments, payment direction, and next actions for your workspace.
+              Track protected payments and what needs your attention next.
             </p>
           </div>
           <Link
