@@ -21,8 +21,17 @@ export function formatDueDate(value: string): string {
     const year = Number(dateOnly[1]);
     const month = Number(dateOnly[2]);
     const day = Number(dateOnly[3]);
+    const date = new Date(year, month - 1, day);
+
+    const isValidCalendarDate =
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day;
+
+    if (!isValidCalendarDate) return value;
+
     return new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(
-      new Date(year, month - 1, day),
+      date,
     );
   }
 
