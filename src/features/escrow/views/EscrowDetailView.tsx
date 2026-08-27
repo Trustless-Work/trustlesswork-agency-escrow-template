@@ -40,7 +40,7 @@ export const EscrowDetailView = ({ escrowId }: EscrowDetailViewProps) => {
     return <EscrowNotFound escrowId={escrowId} />;
   }
 
-  const nextAction = getViewerNextAction(escrow, address);
+  const nextAction = getViewerNextAction(escrow, address ?? undefined);
 
   return (
     <ViewerShell>
