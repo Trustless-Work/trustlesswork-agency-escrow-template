@@ -150,16 +150,19 @@ metadata persistence is out of scope for this issue.
 
 1. Create two testnet Stellar wallets (A and B) in a browser wallet (Freighter,
    xBull, etc.). Fund both with XLM from friendbot.
-2. In **each** wallet, add the testnet **USDC trustline** (Add Asset → USDC with
-   the configured G-issuer). Give the payer USDC to fund with (testnet faucet /
-   anchor). Trustlines cannot be added through the app.
+2. In **each** wallet, add the testnet **USDC trustline** for the recognized
+   issuer below. The payer also needs a USDC balance; testnet USDC is acquired by
+   swapping XLM on the DEX (e.g. Stellar Lab) or via the TW dapp — it is not
+   mintable. Trustlines cannot be added through the app.
 3. Get a **testnet** Trustless Work API key from https://dapp.trustlesswork.com.
 4. Copy `.env.local.example` → `.env.local` and set:
    - `NEXT_PUBLIC_ESCROW_MODE=testnet`
    - `NEXT_PUBLIC_API_KEY=<testnet key>`
    - `NEXT_PUBLIC_USE_MAINNET=false`
    - `NEXT_PUBLIC_PLATFORM_ADDRESS`, `NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS` (valid G-addresses)
-   - `NEXT_PUBLIC_USDC_ISSUER` (G-issuer of testnet USDC — never a C-address)
+   - `NEXT_PUBLIC_USDC_ISSUER` (G-issuer of testnet USDC — never a C-address).
+     TW-recognized testnet USDC issuer:
+     `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`
 5. `pnpm dev`. The testnet actor bar appears at the top; connect wallet A.
 
 Config is validated on first use and fails fast, listing every missing/invalid
@@ -196,31 +199,45 @@ whose required signer is not the connected wallet (before signing).
 
 ## 7. Execution evidence matrices
 
-> Fill during a real two-wallet run. No secrets / XDR / private keys.
+Both matrices below are from a real, passing two-wallet run on Stellar testnet.
+Actual wallet matched the expected role at every step. No secrets / XDR / private
+keys. (Produced by the optional `pnpm test:e2e` harness — see note at the end of
+this section — and reproducible on demand.)
 
 ### Scenario A — Receivable
 
-| Step | Expected role | Expected wallet | Actual wallet | Contract ID | Tx reference | Confirmed state |
-| --- | --- | --- | --- | --- | --- | --- |
-| Create | issuer | A | | | | created |
-| Fund | funder | B | | | | funded |
-| Submit | serviceProvider | A | | | | in review |
-| Approve | approver | B | | | | approved |
-| Release | releaseSigner | B | | | | released |
+Contract `CCVMTKXFZ2DR6YFWX4UR6TJTHNPQ3PB24OP4W3F4NS52JW7XNW7KBQPN`
+([explorer](https://stellar.expert/explorer/testnet/contract/CCVMTKXFZ2DR6YFWX4UR6TJTHNPQ3PB24OP4W3F4NS52JW7XNW7KBQPN))
 
-Net receiver (A) USDC delta: ______  Platform fee routed to platform: ______
+| Step | Expected role | Expected wallet | Actual wallet | Tx reference | Confirmed state |
+| --- | --- | --- | --- | --- | --- |
+| Create | issuer | A | A ✓ | `e4e1114b10c1…` | created |
+| Fund | funder | B | B ✓ | `0b7bd3de2a7e…` | funded |
+| Submit | serviceProvider | A | A ✓ | `799b92704b3a…` | in review |
+| Approve | approver | B | B ✓ | `0958d70567bf…` | approved (no funds moved ✓) |
+| Release | releaseSigner | B | B ✓ | `24cc2bcbff5b…` | released |
+
+Money: receiver (A) net **+99.4 USDC**, platform fee **+0.3 USDC** (exactly the
+30 bps), TW protocol fee 0.3 USDC. `100 = 99.4 + 0.3 + 0.3` ✓
 
 ### Scenario B — Payable
 
-| Step | Expected role | Expected wallet | Actual wallet | Contract ID | Tx reference | Confirmed state |
-| --- | --- | --- | --- | --- | --- | --- |
-| Create | issuer | A | | | | created |
-| Fund | funder | A | | | | funded |
-| Submit | serviceProvider | B | | | | in review |
-| Approve | approver | A | | | | approved |
-| Release | releaseSigner | A | | | | released |
+Contract `CDY37HAAIKWU5U6B5GA4X7DXJG7QMCVFWGHAGWY4T2XPROGA7CA5AYWX`
+([explorer](https://stellar.expert/explorer/testnet/contract/CDY37HAAIKWU5U6B5GA4X7DXJG7QMCVFWGHAGWY4T2XPROGA7CA5AYWX))
 
-Net receiver (B) USDC delta: ______  Platform fee routed to platform: ______
+| Step | Expected role | Expected wallet | Actual wallet | Tx reference | Confirmed state |
+| --- | --- | --- | --- | --- | --- |
+| Create | issuer | A | A ✓ | `9d3fa81b0419…` | created |
+| Fund | funder | A | A ✓ | `794c6ea06ffc…` | funded |
+| Submit | serviceProvider | B | B ✓ | `28bc53ad3900…` | in review |
+| Approve | approver | A | A ✓ | `243b29bf4905…` | approved (no funds moved ✓) |
+| Release | releaseSigner | A | A ✓ | `8157b337e4df…` | released |
+
+Money: receiver (B) net **+49.7 USDC**, platform fee **+0.15 USDC** (exactly the
+30 bps), TW protocol fee 0.15 USDC. `50 = 49.7 + 0.15 + 0.15` ✓
+
+Full transaction hashes and operations for each contract are visible on the
+linked explorer pages. Wallet addresses are omitted (throwaway per run).
 
 ---
 
@@ -285,6 +302,15 @@ normalized to safe messages (`toSafeErrorMessage`) before reaching the UI.
   from the SDK send response (follow-up §11).
 - **No status enum for the indexer read**: lifecycle status is derived from
   `flags`, `milestone.approved`, `milestone.status`, and `balance`.
+- **Recognized testnet USDC only**: deploy validation ("the wallet for role … does
+  not have the required asset") rejects arbitrary self-issued assets, even with a
+  deployed SAC. Role wallets must hold the TW-recognized testnet USDC
+  (`GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`), which is acquired
+  by swapping XLM on the DEX, not minted.
+- **TW protocol fee on release**: Trustless Work deducts its own ~0.30% protocol
+  fee on release, on top of the app platform fee. Net to receiver is
+  `amount − platformFee − twFee` (verified: 100 → 99.4, 50 → 49.7). The app fee
+  preview currently shows only the platform fee (follow-up §11).
 
 ---
 
@@ -297,3 +323,5 @@ normalized to safe messages (`toSafeErrorMessage`) before reaching the UI.
    (populate `transactions.*` and the evidence "Tx reference" column).
 4. Optional on-chain `validateOnChain` reads for stronger confirmation.
 5. Dispute UI (out of scope here; roles/wiring already present).
+6. Show the TW protocol fee (~0.30%) alongside the platform fee in the create-flow
+   fee preview so the displayed net-to-receiver matches on-chain settlement.
