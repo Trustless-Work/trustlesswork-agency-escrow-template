@@ -8,7 +8,8 @@ import type {
   SubmitDeliverableInput,
 } from "@/types/agency-escrow";
 import { getAgencyEscrowService } from "@/features/escrow/services/escrow-service";
-import { useWallet } from "@/lib/wallet-provider";
+import { isTestnetMode } from "@/features/escrow/config/escrow-config";
+import { useTestnetEscrowRuntime } from "./testnet/use-testnet-escrow-runtime";
 import { escrowQueryKeys } from "./query-keys";
 
 function useRefreshEscrow() {
@@ -30,17 +31,13 @@ type ActionRole = keyof Pick<
   "funder" | "serviceProvider" | "approver" | "releaseSigner"
 >;
 
-function useActionActor() {
-  const { address, isMock } = useWallet();
-
+/**
+ * Resolve the acting address for the MOCK service. In mock mode there is no real
+ * wallet, so the actor is read from the seeded escrow's role map. (Testnet uses
+ * the connected wallet as the actor inside the testnet runtime instead.)
+ */
+function useMockActor() {
   return async (escrowId: string, role: ActionRole) => {
-    if (!isMock) {
-      if (!address) {
-        throw new Error("Connect the required Stellar wallet before continuing.");
-      }
-      return address;
-    }
-
     const escrow = await getAgencyEscrowService().getEscrow(escrowId);
     if (!escrow) throw new Error(`Escrow not found: ${escrowId}`);
     return escrow.roles[role];
@@ -49,20 +46,25 @@ function useActionActor() {
 
 export function useCreateProtectedPayment() {
   const refresh = useRefreshEscrow();
+  const testnet = useTestnetEscrowRuntime();
 
   return useMutation({
     mutationFn: (input: CreateAgencyEscrowInput) =>
-      getAgencyEscrowService().createEscrow(input),
+      isTestnetMode()
+        ? testnet.createEscrow(input)
+        : getAgencyEscrowService().createEscrow(input),
     onSuccess: (escrow) => refresh(escrow.escrowId),
   });
 }
 
 export function useFundProtectedPayment(escrowId: string) {
   const refresh = useRefreshEscrow();
-  const resolveActor = useActionActor();
+  const resolveActor = useMockActor();
+  const testnet = useTestnetEscrowRuntime();
 
   return useMutation({
     mutationFn: async () => {
+      if (isTestnetMode()) return testnet.fundEscrow(escrowId);
       const actorAddress = await resolveActor(escrowId, "funder");
       return getAgencyEscrowService().fundEscrow({ escrowId, actorAddress });
     },
@@ -72,10 +74,12 @@ export function useFundProtectedPayment(escrowId: string) {
 
 export function useSubmitDeliverable(escrowId: string) {
   const refresh = useRefreshEscrow();
-  const resolveActor = useActionActor();
+  const resolveActor = useMockActor();
+  const testnet = useTestnetEscrowRuntime();
 
   return useMutation({
     mutationFn: async (data: SubmitDeliverableInput) => {
+      if (isTestnetMode()) return testnet.submitDeliverable(escrowId, data);
       const actorAddress = await resolveActor(escrowId, "serviceProvider");
       return getAgencyEscrowService().submitDeliverable({
         escrowId,
@@ -89,10 +93,12 @@ export function useSubmitDeliverable(escrowId: string) {
 
 export function useReviewDeliverable(escrowId: string) {
   const refresh = useRefreshEscrow();
-  const resolveActor = useActionActor();
+  const resolveActor = useMockActor();
+  const testnet = useTestnetEscrowRuntime();
 
   const approveMutation = useMutation({
     mutationFn: async () => {
+      if (isTestnetMode()) return testnet.approveDeliverable(escrowId);
       const actorAddress = await resolveActor(escrowId, "approver");
       return getAgencyEscrowService().approveDeliverable({
         escrowId,
@@ -104,6 +110,7 @@ export function useReviewDeliverable(escrowId: string) {
 
   const requestChangesMutation = useMutation({
     mutationFn: async (data: RequestChangesInput) => {
+      if (isTestnetMode()) return testnet.requestChanges(escrowId, data);
       const actorAddress = await resolveActor(escrowId, "approver");
       return getAgencyEscrowService().requestChanges({
         escrowId,
@@ -125,10 +132,12 @@ export function useReviewDeliverable(escrowId: string) {
 
 export function useReleaseProtectedPayment(escrowId: string) {
   const refresh = useRefreshEscrow();
-  const resolveActor = useActionActor();
+  const resolveActor = useMockActor();
+  const testnet = useTestnetEscrowRuntime();
 
   return useMutation({
     mutationFn: async () => {
+      if (isTestnetMode()) return testnet.releaseProtectedPayment(escrowId);
       const actorAddress = await resolveActor(escrowId, "releaseSigner");
       return getAgencyEscrowService().releaseProtectedPayment({
         escrowId,
