@@ -1,10 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { toast } from 'sonner'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   AcceptanceCriteriaCard,
   RevisionRequestNotice,
@@ -19,66 +16,10 @@ import { useAgencyEscrow, useSubmitDeliverable } from '@/features/escrow/hooks'
 import { getPaymentParties } from '@/features/escrow/utils/roles'
 import { useWallet } from '@/lib/wallet-provider'
 import type { SubmitDeliverableInput } from '@/types/agency-escrow'
+import { LifecycleShell, LifecyclePageHeader, LifecycleSkeleton } from '@/features/escrow/components/shared'
 
 type SubmitWorkViewProps = {
   escrowId: string
-}
-
-const PageShell = ({
-  escrowId,
-  children,
-}: {
-  escrowId: string
-  children: React.ReactNode
-}) => {
-  return (
-    <main className="min-h-screen bg-background px-4 py-8 text-foreground sm:px-8 sm:py-10">
-      <div className="mx-auto w-full max-w-5xl">
-        <Link
-          href={`/escrow/${escrowId}`}
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          &larr; Back to escrow
-        </Link>
-        <div className="mt-6 border-b border-border pb-6">
-          <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-            Work submission
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-            Submit deliverable
-          </h1>
-        </div>
-        <div className="mt-6">{children}</div>
-      </div>
-    </main>
-  )
-}
-
-const LoadingState = () => {
-  return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-40" />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-5 w-32" />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-16 w-full" />
-        </CardContent>
-      </Card>
-    </div>
-  )
 }
 
 export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
@@ -89,15 +30,23 @@ export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
 
   if (escrowQuery.isPending) {
     return (
-      <PageShell escrowId={escrowId}>
-        <LoadingState />
-      </PageShell>
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader
+          context="Work submission"
+          title="Submit deliverable"
+        />
+        <LifecycleSkeleton />
+      </LifecycleShell>
     )
   }
 
   if (escrowQuery.isError) {
     return (
-      <PageShell escrowId={escrowId}>
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader
+          context="Work submission"
+          title="Submit deliverable"
+        />
         <SubmissionBlockedNotice
           escrowId={escrowId}
           title="We could not load this engagement"
@@ -107,7 +56,7 @@ export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
               : 'Something went wrong while loading the escrow. Try again in a moment.'
           }
         />
-      </PageShell>
+      </LifecycleShell>
     )
   }
 
@@ -115,13 +64,17 @@ export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
 
   if (!escrow) {
     return (
-      <PageShell escrowId={escrowId}>
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader
+          context="Work submission"
+          title="Submit deliverable"
+        />
         <SubmissionBlockedNotice
           escrowId={escrowId}
           title="Engagement not found"
           description={`No escrow matches the id ${escrowId}. Check the link or pick an engagement from your dashboard.`}
         />
-      </PageShell>
+      </LifecycleShell>
     )
   }
 
@@ -148,8 +101,13 @@ export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
   }
 
   return (
-    <PageShell escrowId={escrowId}>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+      <LifecyclePageHeader
+        context="Work submission"
+        title="Submit deliverable"
+        status={escrow.status}
+      />
+      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="order-2 space-y-6 lg:order-1">
           {submittedMode ? (
             <SubmissionSuccessCard
@@ -191,6 +149,6 @@ export const SubmitWorkView = ({ escrowId }: SubmitWorkViewProps) => {
           <AcceptanceCriteriaCard milestone={escrow.milestone} />
         </aside>
       </div>
-    </PageShell>
+    </LifecycleShell>
   )
 }

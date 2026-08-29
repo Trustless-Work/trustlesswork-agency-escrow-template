@@ -29,7 +29,7 @@ export const ReleaseCompletedCard = ({
     <Card>
       <CardHeader>
         <div className="flex items-start gap-3">
-          <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-[#2f7bff] dark:text-[#7eb6ff]" />
           <div>
             <CardTitle>
               {alreadyReleased ? "Payment already released" : "Payment released"}

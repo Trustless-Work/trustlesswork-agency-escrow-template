@@ -38,7 +38,7 @@ const PartyCard = ({
       <span
         className={
           accent === "payee"
-            ? "mt-2 inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"
+            ? "mt-2 inline-flex rounded-full bg-[#2f7bff]/10 px-2 py-0.5 text-[11px] font-medium text-[#2f7bff] dark:bg-[#2f7bff]/15 dark:text-[#7eb6ff]"
             : "mt-2 inline-flex rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
         }
       >

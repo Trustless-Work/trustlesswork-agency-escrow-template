@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
@@ -9,8 +8,9 @@ import {
 } from '@/components/ui/card'
 import { calculateFeeBreakdown } from '@/features/escrow/utils/fees'
 import { getPaymentParties } from '@/features/escrow/utils/roles'
+import { StatusChip } from '@/features/escrow/components/shared'
 import type { AgencyEscrow } from '@/types/agency-escrow'
-import { formatAmount, formatDate, formatStatus, shortenAddress } from './format'
+import { formatAmount, formatDate, shortenAddress } from './format'
 import { getServiceProvider } from './submission-access'
 
 type SubmissionSummaryCardProps = {
@@ -49,7 +49,7 @@ export const SubmissionSummaryCard = ({ escrow }: SubmissionSummaryCardProps) =>
               Engagement {escrow.engagementId}
             </CardDescription>
           </div>
-          <Badge variant="secondary">{formatStatus(escrow.status)}</Badge>
+          <StatusChip status={escrow.status} />
         </div>
       </CardHeader>
       <CardContent>

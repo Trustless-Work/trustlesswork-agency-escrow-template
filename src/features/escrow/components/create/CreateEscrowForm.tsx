@@ -620,7 +620,7 @@ export const CreateEscrowForm = ({
             <button
               type="submit"
               disabled={isSubmitting || walletMissing}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#2f7bff] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#1e5fd9] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>

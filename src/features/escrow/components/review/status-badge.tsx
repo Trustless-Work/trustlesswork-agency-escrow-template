@@ -25,7 +25,7 @@ const LABEL_BY_STATUS: Record<AgencyEscrowStatus, string> = {
 
 const TONE_CLASS: Record<BadgeTone, string> = {
   pending: "text-amber-600",
-  approved: "text-emerald-600",
+  approved: "text-[#2f7bff] dark:text-[#7eb6ff]",
   rejected: "text-red-600",
 };
 

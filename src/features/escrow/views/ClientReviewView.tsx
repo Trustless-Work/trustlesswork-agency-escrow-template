@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { getPaymentParties } from "@/features/escrow/utils/roles";
 import { cn } from "@/lib/utils";
 import { EscrowSummarySections } from "@/features/escrow/components/review/escrow-summary-card";
@@ -11,6 +9,7 @@ import { ResultBanner } from "@/features/escrow/components/review/result-banner"
 import { ReviewHeader } from "@/features/escrow/components/review/review-header";
 import { ApproverEmptySubmissions } from "@/features/escrow/components/review/submission-gate";
 import { useReviewFlow } from "@/features/escrow/components/review/use-review-flow";
+import { LifecycleShell } from "@/features/escrow/components/shared";
 
 type ClientReviewViewProps = {
   escrowId: string;
@@ -67,30 +66,13 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
       : "not_found";
 
   return (
-    <main className="min-h-screen bg-neutral-50 px-4 py-10 text-neutral-950 sm:px-6 lg:px-8">
+    <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
       <style>{REVIEW_MOTION_CSS}</style>
-      <div className="mx-auto w-full max-w-5xl space-y-6">
-        {!escrow ? (
-          <>
-            <Link
-              href={`/escrow/${escrowId}`}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-zinc-500/[0.25] px-3 py-1 text-xs font-semibold text-neutral-500 transition-colors hover:border-red-300 hover:text-red-600"
-            >
-              <ArrowLeft aria-hidden className="h-3 w-3" />
-              Back
-            </Link>
-            <GuardPanel variant={guardVariant} />
-          </>
-        ) : (
-          <div className="rv-fade-up space-y-6">
-            <Link
-              href={`/escrow/${escrowId}`}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-zinc-500/[0.25] px-3 py-1 text-xs font-semibold text-neutral-500 transition-colors hover:border-red-300 hover:text-red-600"
-            >
-              <ArrowLeft aria-hidden className="h-3 w-3" />
-              Back
-            </Link>
-            <ReviewHeader escrow={escrow} />
+      {!escrow ? (
+        <GuardPanel variant={guardVariant} />
+      ) : (
+        <div className="rv-fade-up space-y-6">
+          <ReviewHeader escrow={escrow} />
 
               {(isMock || hasBanner) && (
                 <div className="space-y-5 pt-6">
@@ -147,18 +129,17 @@ export const ClientReviewView = ({ escrowId }: ClientReviewViewProps) => {
                 </div>
               )}
 
-            <EscrowSummarySections
-              escrow={escrow}
-              onApprove={handleApprove}
-              onRequestChanges={handleRequestChanges}
-              canReview={canReview}
-              canRequestChanges={canRequestChanges}
-              approvePending={approvePending}
-              requestChangesPending={requestChangesPending}
-            />
-          </div>
-        )}
-      </div>
-    </main>
+          <EscrowSummarySections
+            escrow={escrow}
+            onApprove={handleApprove}
+            onRequestChanges={handleRequestChanges}
+            canReview={canReview}
+            canRequestChanges={canRequestChanges}
+            approvePending={approvePending}
+            requestChangesPending={requestChangesPending}
+          />
+        </div>
+      )}
+    </LifecycleShell>
   );
 };
