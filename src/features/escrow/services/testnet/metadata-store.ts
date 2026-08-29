@@ -98,6 +98,21 @@ export function patchEscrowMeta(
 ): TestnetEscrowMeta | null {
   const map = readMap<TestnetEscrowMeta>(META_KEY);
   const current = map[contractId];
+
+  // Request changes is local-only workflow state. Enforce the same lifecycle
+  // invariant as the canonical state machine so created/funded escrows (or an
+  // escrow already awaiting resubmission) cannot become revision_requested.
+  if (patch.revisionRequested === true) {
+    if (!current?.timestamps.submittedAt || current.revisionRequested) {
+      throw new Error(
+        "Changes can only be requested for a submitted deliverable that is currently in review.",
+      );
+    }
+    if (current.timestamps.approvedAt || current.timestamps.releasedAt) {
+      throw new Error("Changes cannot be requested after approval or release.");
+    }
+  }
+
   if (!current) return null;
   const next: TestnetEscrowMeta = {
     ...current,
