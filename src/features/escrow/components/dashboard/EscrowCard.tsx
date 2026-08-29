@@ -24,16 +24,16 @@ export const EscrowCard = ({ escrow }: EscrowCardProps) => {
   return (
     <Link
       href={`/escrow/${escrow.escrowId}`}
-      className="block transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
+      className="block transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Card className="h-full">
         <div className="flex flex-col gap-4 p-5">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex-1 min-w-0">
-              <h3 className="truncate text-base font-semibold text-neutral-950">
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-base font-semibold text-card-foreground">
                 {escrow.agreement.title}
               </h3>
-              <p className="mt-1 text-sm text-neutral-600">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {payer.name} → {payee.name}
               </p>
             </div>
@@ -46,18 +46,18 @@ export const EscrowCard = ({ escrow }: EscrowCardProps) => {
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-            <span className="font-medium tabular-nums text-neutral-950">
+            <span className="font-medium tabular-nums text-card-foreground">
               {formatAmount(escrow.payment.amount, escrow.payment.asset)}
             </span>
             <StatusChip status={escrow.status} />
             {escrow.agreement.dueDate ? (
-              <span className="text-neutral-600">
+              <span className="text-muted-foreground">
                 Due {formatDate(escrow.agreement.dueDate)}
               </span>
             ) : null}
           </div>
 
-          <p className="text-sm text-neutral-600">{nextStep}</p>
+          <p className="text-sm text-muted-foreground">{nextStep}</p>
         </div>
       </Card>
     </Link>

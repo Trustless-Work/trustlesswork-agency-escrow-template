@@ -43,20 +43,19 @@ function CopyAddressPill({
   return (
     <div
       className={cn(
-        "relative inline-flex max-w-full flex-wrap items-center gap-1 overflow-hidden rounded-full bg-[#f7f7f7] p-1",
+        "relative inline-flex max-w-full flex-wrap items-center gap-1 overflow-hidden rounded-full bg-muted p-1",
         copied && "justify-center",
       )}
       style={{ borderRadius: 56 }}
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-[#f2f2f2] transition-all duration-500 ease-out"
+        className="pointer-events-none absolute inset-0 bg-secondary transition-all duration-500 ease-out"
         style={{ width: copied ? "100%" : "0%", borderRadius: 56 }}
       />
       <span className="relative grid place-items-center justify-center px-2" style={{ minWidth: 110 }}>
         <span
-          className="col-start-1 row-start-1 whitespace-nowrap font-mono text-sm font-semibold tracking-tight transition-all duration-300"
+          className="col-start-1 row-start-1 whitespace-nowrap font-mono text-sm font-semibold tracking-tight text-muted-foreground transition-all duration-300"
           style={{
-            color: "#aaaaaa",
             opacity: copied ? 0 : 1,
             transform: copied ? "translateX(-8px)" : "translateX(0)",
             willChange: "transform",
@@ -65,16 +64,15 @@ function CopyAddressPill({
           {shortenAddress(address)}
         </span>
         <span
-          className="col-start-1 row-start-1 inline-flex items-center translate-x-8 gap-1.5 whitespace-nowrap font-mono text-base font-semibold tracking-tight transition-all duration-300"
+          className="col-start-1 row-start-1 inline-flex translate-x-8 items-center gap-1.5 whitespace-nowrap font-mono text-base font-semibold tracking-tight text-foreground transition-all duration-300"
           style={{
-            color: "#171717",
             opacity: copied ? 1 : 0,
             transform: copied ? "translateX(0)" : "translateX(8px)",
             willChange: "transform",
           }}
           aria-hidden
         >
-          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-white">
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#2f7bff] text-white">
             <svg
               viewBox="0 0 12 9"
               fill="none"
@@ -96,7 +94,7 @@ function CopyAddressPill({
         onClick={onCopy}
         disabled={disabled}
         aria-label={`Copy wallet address ${address}`}
-        className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#fefefe] px-3 text-xs font-medium text-neutral-700 transition-all duration-300 ease-out"
+        className="relative flex h-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-background px-3 text-xs font-medium text-foreground transition-all duration-300 ease-out hover:bg-accent disabled:opacity-50"
         style={{
           opacity: copied ? 0 : 1,
           transform: copied ? "scale(0.9)" : "scale(1)",
@@ -126,8 +124,8 @@ function PartyMeta({ party }: { party: AgencyEscrowParty }) {
   };
 
   return (
-    <div className="flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-1.5 sm:flex-col sm:items-start sm:justify-start sm:gap-y-1.5 sm:gap-x-0">
-      <p className="shrink-0 text-sm font-medium text-neutral-900">{party.name}</p>
+    <div className="flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-1.5 sm:flex-col sm:items-start sm:justify-start sm:gap-x-0 sm:gap-y-1.5">
+      <p className="shrink-0 text-sm font-medium text-foreground">{party.name}</p>
       <CopyAddressPill
         address={party.walletAddress}
         copied={copied}
@@ -152,7 +150,7 @@ function SummarySection({
     <section
       className={cn(
         "space-y-2",
-        divided && "border-t border-zinc-500/[0.08] pt-6",
+        divided && "border-t border-border pt-6",
       )}
     >
       <SectionHeading>{title}</SectionHeading>
@@ -217,14 +215,14 @@ export function EscrowSummarySections({
   return (
     <div className="space-y-6">
       <SummarySection title="Acceptance criteria">
-        <div className="rounded-[20px] border border-zinc-500/[0.08] bg-white p-4">
+        <div className="rounded-[20px] border border-border bg-card p-4">
           <div className="space-y-3">
             <MicroLabel>Requirements</MicroLabel>
             {criteriaLines.length > 1 ? (
               <div className="space-y-5">
                 {criteriaLines.map((line, index) => (
                   <div key={index} className="flex gap-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-300 bg-white text-sm font-semibold text-neutral-700">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-muted text-sm font-semibold text-foreground">
                       {index + 1}
                     </span>
                     <BodyText className="flex-1 leading-7">{line}</BodyText>
@@ -246,40 +244,40 @@ export function EscrowSummarySections({
 
       <SummarySection divided title="Submitted work">
         {hasSubmission ? (
-          <div className="rounded-[20px] bg-white p-4">
-              <div className="py-4 first:pt-1 last:pb-1">
-                <MicroLabel>Delivery summary</MicroLabel>
+          <div className="rounded-[20px] border border-border bg-card p-4">
+            <div className="py-4 first:pt-1 last:pb-1">
+              <MicroLabel>Delivery summary</MicroLabel>
+              <BodyText className="mt-2 whitespace-pre-line leading-7">
+                {milestone.deliverySummary ?? "No summary provided."}
+              </BodyText>
+            </div>
+            {milestone.deliverableLinks && milestone.deliverableLinks.length > 0 && (
+              <div className="py-4">
+                <MicroLabel>Deliverable links</MicroLabel>
+                <div className="mt-2">
+                  <DeliverableLinks links={milestone.deliverableLinks} />
+                </div>
+              </div>
+            )}
+            {milestone.evidence && (
+              <div className="py-4">
+                <MicroLabel>Evidence</MicroLabel>
+                <div className="mt-2">
+                  <DeliverableLinks links={[milestone.evidence]} />
+                </div>
+              </div>
+            )}
+            {milestone.revisionNotes && (
+              <div className="py-4">
+                <MicroLabel>Revision notes</MicroLabel>
                 <BodyText className="mt-2 whitespace-pre-line leading-7">
-                  {milestone.deliverySummary ?? "No summary provided."}
+                  {milestone.revisionNotes}
                 </BodyText>
               </div>
-              {milestone.deliverableLinks && milestone.deliverableLinks.length > 0 && (
-                <div className="py-4">
-                  <MicroLabel>Deliverable links</MicroLabel>
-                  <div className="mt-2">
-                    <DeliverableLinks links={milestone.deliverableLinks} />
-                  </div>
-                </div>
-              )}
-              {milestone.evidence && (
-                <div className="py-4">
-                  <MicroLabel>Evidence</MicroLabel>
-                  <div className="mt-2">
-                    <DeliverableLinks links={[milestone.evidence]} />
-                  </div>
-                </div>
-              )}
-              {milestone.revisionNotes && (
-                <div className="py-4">
-                  <MicroLabel>Revision notes</MicroLabel>
-                  <BodyText className="mt-2 whitespace-pre-line leading-7">
-                    {milestone.revisionNotes}
-                  </BodyText>
-                </div>
-              )}
-            </div>
+            )}
+          </div>
         ) : (
-          <BodyText className="text-neutral-500">Nothing submitted yet.</BodyText>
+          <BodyText className="text-muted-foreground">Nothing submitted yet.</BodyText>
         )}
       </SummarySection>
 
@@ -287,7 +285,7 @@ export function EscrowSummarySections({
         <div className="flex justify-end">
           <Button
             onClick={() => setReviewOpen(true)}
-            className="flex h-11 cursor-pointer items-center justify-center rounded-full bg-neutral-950 px-6 text-[15px] font-semibold tracking-tight text-white shadow-sm transition-colors hover:bg-neutral-800"
+            className="flex h-11 cursor-pointer items-center justify-center rounded-full bg-[#2f7bff] px-6 text-[15px] font-semibold tracking-tight text-white shadow-sm transition-colors hover:bg-[#1f6aee]"
           >
             Review
           </Button>
@@ -296,18 +294,18 @@ export function EscrowSummarySections({
 
       <Dialog.Root open={reviewOpen} onOpenChange={setReviewOpen}>
         <Dialog.Portal>
-          <Dialog.Overlay className="rv-overlay fixed inset-0 z-40 bg-black/45" />
-          <Dialog.Content className="rv-modal fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[min(92vw,640px)] overflow-y-auto rounded-[20px] border border-zinc-500/[0.12] bg-white p-4 shadow-2xl focus:outline-none sm:rounded-[28px] sm:p-6">
+          <Dialog.Overlay className="rv-overlay fixed inset-0 z-40 bg-black/60" />
+          <Dialog.Content className="dark rv-modal fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[min(92vw,640px)] overflow-y-auto rounded-[20px] border border-border bg-card p-4 text-card-foreground shadow-2xl focus:outline-none sm:rounded-[28px] sm:p-6">
             <div className="space-y-1">
-              <Dialog.Title className="text-xl font-medium tracking-tight text-neutral-950">
+              <Dialog.Title className="text-xl font-medium tracking-tight text-foreground">
                 Review deliverables
               </Dialog.Title>
-              <p className="text-sm font-medium leading-5 text-neutral-500">
+              <p className="text-sm font-medium leading-5 text-muted-foreground">
                 Inspect the submission against the agreed criteria — approve or request changes.
               </p>
             </div>
             <div className="mt-4 space-y-4">
-              <div className="rounded-2xl bg-neutral-50 p-4">
+              <div className="rounded-2xl bg-muted p-4">
                 <div className="space-y-4">
                   <div className="space-y-1">
                     <MicroLabel>Delivery summary</MicroLabel>
@@ -341,7 +339,7 @@ export function EscrowSummarySections({
                     type="submit"
                     form="review-revision-form"
                     disabled={approvePending || !canRequestChanges || !!requestChangesPending}
-                    className="h-11 w-full cursor-pointer rounded-full bg-neutral-50 px-6 text-[15px] font-semibold tracking-tight text-orange-600 transition-colors hover:bg-orange-50 sm:w-auto"
+                    className="h-11 w-full cursor-pointer rounded-full border border-amber-500/30 bg-amber-500/10 px-6 text-[15px] font-semibold tracking-tight text-amber-300 transition-colors hover:bg-amber-500/15 sm:w-auto"
                   >
                     Request changes
                   </Button>
@@ -362,7 +360,7 @@ export function EscrowSummarySections({
               <button
                 type="button"
                 aria-label="Close"
-                className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-transparent text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
+                className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-transparent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 <X aria-hidden className="h-4 w-4" />
               </button>
@@ -372,8 +370,8 @@ export function EscrowSummarySections({
       </Dialog.Root>
 
       <SummarySection divided title="Engagement terms">
-        <div className="rounded-[20px] border border-zinc-500/[0.08] bg-white p-4">
-          <div className="divide-y divide-zinc-500/[0.08]">
+        <div className="rounded-[20px] border border-border bg-card p-4">
+          <div className="divide-y divide-border">
             <MetaRow label="Payer">
               <PartyMeta party={payer} />
             </MetaRow>
@@ -381,7 +379,7 @@ export function EscrowSummarySections({
               <PartyMeta party={payee} />
             </MetaRow>
             <MetaRow label="Payment">
-              <p className="text-sm font-semibold text-neutral-900">
+              <p className="text-sm font-semibold text-foreground">
                 {formatAmount(escrow.payment.amount, escrow.payment.asset)}
               </p>
             </MetaRow>

@@ -7,7 +7,7 @@ import { backLinkClass } from "./design-tokens";
 
 export function LifecycleShell({ children, backHref, backLabel = "Back" }: { children: ReactNode; backHref?: string; backLabel?: string }) {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#05070d] text-white">
+    <main className="dark relative min-h-screen overflow-hidden bg-[#05070d] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(47,123,255,0.18),_transparent_42%),radial-gradient(circle_at_80%_20%,_rgba(94,200,255,0.08),_transparent_28%)]" />
       <header className="relative border-b border-white/10">
         <nav className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6 sm:px-10">

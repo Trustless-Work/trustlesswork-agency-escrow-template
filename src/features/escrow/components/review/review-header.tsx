@@ -19,14 +19,14 @@ export function ReviewHeader({ escrow }: ReviewHeaderProps) {
     <header>
       <PageHeading>{escrow.agreement.title}</PageHeading>
       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="inline-flex items-center rounded-full border border-zinc-500/[0.12] bg-white px-3 py-1 text-xs font-semibold text-neutral-700">
+        <span className="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1 text-xs font-semibold text-foreground">
           {escrow.paymentDirection}
         </span>
-        <span className="text-sm font-medium text-neutral-900">
+        <span className="text-sm font-medium text-foreground">
           {payer.name}
         </span>
-        <ArrowRight aria-hidden className="h-4 w-4 text-neutral-400" />
-        <span className="text-sm font-medium text-neutral-900">
+        <ArrowRight aria-hidden className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">
           {payee.name}
         </span>
         <StatusChip status={escrow.status} />

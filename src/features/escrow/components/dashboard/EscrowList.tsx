@@ -29,9 +29,9 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
         ))}
       </div>
 
-      <div className="hidden overflow-x-auto rounded-lg border border-neutral-200 bg-white md:block">
+      <div className="hidden overflow-x-auto rounded-lg border border-border bg-card text-card-foreground md:block">
         <table className="w-full border-collapse text-left text-sm">
-          <thead className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <thead className="border-b border-border bg-muted/50 text-xs font-medium uppercase tracking-wide text-muted-foreground">
             <tr>
               <th className="px-4 py-3">Escrow</th>
               <th className="px-4 py-3">Direction</th>
@@ -41,7 +41,7 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
               <th className="px-4 py-3">Next action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-200">
+          <tbody className="divide-y divide-border">
             {escrows.map((escrow) => {
               const { payer, payee } = getPaymentParties(
                 escrow.paymentDirection,
@@ -51,15 +51,15 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
               const isReceivable = escrow.paymentDirection === "receivable";
 
               return (
-                <tr key={escrow.escrowId} className="align-top hover:bg-neutral-50">
+                <tr key={escrow.escrowId} className="align-top transition-colors hover:bg-muted/30">
                   <td className="px-4 py-4">
                     <Link
                       href={`/escrow/${escrow.escrowId}`}
-                      className="font-medium text-neutral-950 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950"
+                      className="font-medium text-card-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {escrow.agreement.title}
                     </Link>
-                    <p className="mt-1 text-xs text-neutral-500">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {payer.name} → {payee.name}
                     </p>
                   </td>
@@ -68,16 +68,16 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
                       {isReceivable ? "Getting paid" : "Paying"}
                     </Badge>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-4 font-medium tabular-nums text-neutral-950">
+                  <td className="whitespace-nowrap px-4 py-4 font-medium tabular-nums text-card-foreground">
                     {formatAmount(escrow.payment.amount, escrow.payment.asset)}
                   </td>
                   <td className="px-4 py-4">
                     <StatusChip status={escrow.status} />
                   </td>
-                  <td className="whitespace-nowrap px-4 py-4 text-neutral-600">
+                  <td className="whitespace-nowrap px-4 py-4 text-muted-foreground">
                     {formatDate(escrow.agreement.dueDate) || "—"}
                   </td>
-                  <td className="px-4 py-4 text-neutral-600">
+                  <td className="px-4 py-4 text-muted-foreground">
                     {getEscrowNextStep(escrow)}
                   </td>
                 </tr>
