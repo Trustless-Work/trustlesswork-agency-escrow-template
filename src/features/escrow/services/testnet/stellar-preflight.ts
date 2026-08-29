@@ -1,6 +1,7 @@
 import {
   InsufficientBalanceError,
   MissingTrustlineError,
+  SubmissionError,
 } from "./errors";
 
 /**
@@ -11,6 +12,8 @@ import {
  * is actually ready to hold the asset (and, for funding, has enough balance),
  * so users get actionable guidance instead of a cryptic Soroban failure.
  */
+
+const HORIZON_REQUEST_TIMEOUT_MS = 10_000;
 
 type HorizonBalance = {
   asset_type: string;
@@ -36,16 +39,36 @@ export async function getAssetReadiness(
   issuer: string,
   symbol: string,
 ): Promise<AssetReadiness> {
-  const response = await fetch(
-    `${horizonUrl}/accounts/${encodeURIComponent(address)}`,
-    { headers: { Accept: "application/json" } },
-  );
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), HORIZON_REQUEST_TIMEOUT_MS);
+
+  let response: Response;
+  try {
+    response = await fetch(
+      `${horizonUrl}/accounts/${encodeURIComponent(address)}`,
+      {
+        headers: { Accept: "application/json" },
+        signal: controller.signal,
+      },
+    );
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new SubmissionError(
+        "The Stellar testnet readiness check timed out. Please try again.",
+      );
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (response.status === 404) {
     return { accountExists: false, hasTrustline: false, balance: 0 };
   }
   if (!response.ok) {
-    throw new Error(`Horizon read failed (${response.status})`);
+    throw new SubmissionError(
+      `The Stellar testnet readiness check failed (${response.status}). Please try again.`,
+    );
   }
 
   const account = (await response.json()) as { balances?: HorizonBalance[] };
@@ -72,6 +95,11 @@ export async function assertTrustlineReady(
   roleLabel: string,
 ): Promise<AssetReadiness> {
   const readiness = await getAssetReadiness(horizonUrl, address, issuer, symbol);
+  if (!readiness.accountExists) {
+    throw new SubmissionError(
+      `The ${roleLabel} Stellar testnet account does not exist yet. Fund or create the account first, then add the ${symbol} trustline.`,
+    );
+  }
   if (!readiness.hasTrustline) {
     throw new MissingTrustlineError(roleLabel, symbol);
   }
