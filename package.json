@@ -11,7 +11,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --disable-warning=ExperimentalWarning --experimental-strip-types --test \"src/**/*.test.ts\"",
+    "test:e2e": "node --disable-warning=ExperimentalWarning --env-file-if-exists=.env.local --experimental-strip-types scripts/testnet-e2e.ts"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "2.5.0",
@@ -37,6 +39,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@stellar/stellar-sdk": "^17.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

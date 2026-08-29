@@ -37,12 +37,19 @@ export function getEscrowRuntimeMode(): EscrowRuntimeMode {
   return process.env.NEXT_PUBLIC_ESCROW_MODE === "testnet" ? "testnet" : "mock";
 }
 
+/**
+ * The singleton service backs MOCK mode only. Testnet mode is orchestrated
+ * through React hooks (`useTestnetEscrowRuntime`), because the Trustless Work
+ * SDK write/read APIs are React hooks and must run inside React context — they
+ * cannot be called from a plain singleton. The application hooks branch on the
+ * runtime mode, so this function is never reached in testnet mode.
+ */
 export function getAgencyEscrowService(): AgencyEscrowService {
   const mode = getEscrowRuntimeMode();
 
   if (mode === "testnet") {
     throw new Error(
-      "Testnet mode requires the Trustless Work adapter. Use NEXT_PUBLIC_ESCROW_MODE=mock until the SDK foundation is configured.",
+      "getAgencyEscrowService() is mock-only. Testnet writes/reads go through useTestnetEscrowRuntime; this path should not be reached in testnet mode.",
     );
   }
 

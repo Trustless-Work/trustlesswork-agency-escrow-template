@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/lib/theme-provider";
 import { ReactQueryProvider } from "@/lib/react-query-provider";
 import { WalletProvider } from "@/lib/wallet-provider";
 import { TrustlessWorkProvider } from "@/lib/trustlesswork-provider";
+import { WalletActorBar } from "@/features/escrow/components/wallet/WalletActorBar";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <TrustlessWorkProvider>
               <WalletProvider>
+                <WalletActorBar />
                 {children}
                 <Toaster />
               </WalletProvider>
