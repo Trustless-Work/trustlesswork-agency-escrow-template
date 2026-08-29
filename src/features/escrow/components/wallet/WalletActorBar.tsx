@@ -13,8 +13,7 @@ import {
  *
  * In testnet the connected Stellar wallet IS the current actor for role gating
  * and signing, so the operator needs to connect, see the active address, and
- * switch between the two wallet identities (A and B). This is intentionally
- * unstyled beyond the essentials — visual-system convergence belongs to #21.
+ * switch between the two wallet identities (A and B).
  *
  * It never imports Trustless Work SDK hooks; it only reads the wallet context.
  */
@@ -46,7 +45,7 @@ export const WalletActorBar = () => {
     });
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950">
+    <div className="dark flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
