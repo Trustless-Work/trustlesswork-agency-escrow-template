@@ -20,7 +20,7 @@ export function ReviewCard({
   return (
     <section
       className={cn(
-        "overflow-hidden rounded-[24px] border border-zinc-500/[0.10] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all",
+        "overflow-hidden rounded-[24px] border border-border bg-card text-card-foreground shadow-[0_1px_3px_rgba(0,0,0,0.18)] transition-all",
         className,
       )}
     >
