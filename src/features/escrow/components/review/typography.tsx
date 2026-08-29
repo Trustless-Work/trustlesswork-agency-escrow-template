@@ -8,7 +8,7 @@ type TypographyProps = {
 
 export function Eyebrow({ children, className }: TypographyProps) {
   return (
-    <p className={cn("text-xs font-medium text-neutral-500", className)}>
+    <p className={cn("text-xs font-medium text-muted-foreground", className)}>
       {children}
     </p>
   );
@@ -18,7 +18,7 @@ export function PageHeading({ children, className }: TypographyProps) {
   return (
     <h1
       className={cn(
-        "max-w-3xl text-[28px] font-medium leading-[0.98] tracking-[-1.5px] text-neutral-950 sm:text-[38px] sm:tracking-[-2px] lg:text-[50px] lg:leading-[0.91] lg:tracking-[-3px]",
+        "max-w-3xl text-[28px] font-medium leading-[0.98] tracking-[-1.5px] text-foreground sm:text-[38px] sm:tracking-[-2px] lg:text-[50px] lg:leading-[0.91] lg:tracking-[-3px]",
         className,
       )}
     >
@@ -31,7 +31,7 @@ export function SectionHeading({ children, className }: TypographyProps) {
   return (
     <h2
       className={cn(
-        "text-[22px] font-medium leading-[1.05] tracking-[-0.8px] text-neutral-950 sm:text-[26px] lg:text-[30px]",
+        "text-[22px] font-medium leading-[1.05] tracking-[-0.8px] text-foreground sm:text-[26px] lg:text-[30px]",
         className,
       )}
     >
@@ -43,7 +43,7 @@ export function SectionHeading({ children, className }: TypographyProps) {
 export function Subheading({ children, className }: TypographyProps) {
   return (
     <h3
-      className={cn("text-sm font-semibold tracking-tight text-neutral-900", className)}
+      className={cn("text-sm font-semibold tracking-tight text-foreground", className)}
     >
       {children}
     </h3>
@@ -54,7 +54,7 @@ export function BodyText({ children, className }: TypographyProps) {
   return (
     <p
       className={cn(
-        "text-base font-medium leading-[1.45] tracking-[-0.01em] text-neutral-900",
+        "text-base font-medium leading-[1.45] tracking-[-0.01em] text-foreground",
         className,
       )}
     >
@@ -67,7 +67,7 @@ export function MutedText({ children, className }: TypographyProps) {
   return (
     <p
       className={cn(
-        "text-sm font-medium leading-5 text-neutral-500",
+        "text-sm font-medium leading-5 text-muted-foreground",
         className,
       )}
     >
@@ -80,7 +80,7 @@ export function MicroLabel({ children, className }: TypographyProps) {
   return (
     <p
       className={cn(
-        "text-base font-semibold tracking-tight text-neutral-400",
+        "text-base font-semibold tracking-tight text-muted-foreground",
         className,
       )}
     >
@@ -93,7 +93,7 @@ export function MonoText({ children, className }: TypographyProps) {
   return (
     <span
       className={cn(
-        "font-mono text-xs tracking-tight text-neutral-500",
+        "font-mono text-xs tracking-tight text-muted-foreground",
         className,
       )}
     >
