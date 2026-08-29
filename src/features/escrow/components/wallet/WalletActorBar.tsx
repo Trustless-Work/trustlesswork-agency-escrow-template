@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useWallet } from "@/lib/wallet-provider";
 import { useTrustlessWorkRuntime } from "@/lib/trustlesswork-provider";
-import { shortenAddress } from "@/features/escrow/services/testnet/errors";
+import {
+  shortenAddress,
+  toSafeErrorMessage,
+} from "@/features/escrow/services/testnet/errors";
 
 /**
  * Minimal, functional wallet actor bar for the two-party testnet lifecycle.
@@ -19,14 +22,18 @@ export const WalletActorBar = () => {
   const { mode } = useTrustlessWorkRuntime();
   const { connected, address, connect, disconnect } = useWallet();
   const [busy, setBusy] = useState(false);
+  const [operationError, setOperationError] = useState<string | null>(null);
 
   // Mock mode has no real wallet identity to select.
   if (mode !== "testnet") return null;
 
   const run = async (fn: () => Promise<void>) => {
     setBusy(true);
+    setOperationError(null);
     try {
       await fn();
+    } catch (error) {
+      setOperationError(toSafeErrorMessage(error));
     } finally {
       setBusy(false);
     }
@@ -40,19 +47,26 @@ export const WalletActorBar = () => {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-950">
-      <div className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
-          Testnet
-        </span>
-        {connected && address ? (
-          <span className="font-mono text-xs text-neutral-700 dark:text-neutral-300">
-            Acting as {shortenAddress(address)}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+            Testnet
           </span>
-        ) : (
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            No wallet connected
+          {connected && address ? (
+            <span className="font-mono text-xs text-neutral-700 dark:text-neutral-300">
+              Acting as {shortenAddress(address)}
+            </span>
+          ) : (
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+              No wallet connected
+            </span>
+          )}
+        </div>
+        {operationError ? (
+          <span role="alert" className="text-xs text-red-600 dark:text-red-400">
+            {operationError}
           </span>
-        )}
+        ) : null}
       </div>
 
       <div className="flex items-center gap-2">
