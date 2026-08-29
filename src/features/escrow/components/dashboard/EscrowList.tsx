@@ -4,9 +4,9 @@ import Link from "next/link";
 import type { AgencyEscrow } from "@/types/agency-escrow";
 import { Badge } from "@/components/ui/badge";
 import { getPaymentParties } from "@/features/escrow/utils/roles";
+import { StatusChip } from "@/features/escrow/components/shared";
 import { EscrowCard } from "./EscrowCard";
 import {
-  STATUS_LABELS,
   formatAmount,
   formatDate,
   getEscrowNextStep,
@@ -72,7 +72,7 @@ export const EscrowList = ({ escrows }: EscrowListProps) => {
                     {formatAmount(escrow.payment.amount, escrow.payment.asset)}
                   </td>
                   <td className="px-4 py-4">
-                    <Badge variant="outline">{STATUS_LABELS[escrow.status]}</Badge>
+                    <StatusChip status={escrow.status} />
                   </td>
                   <td className="whitespace-nowrap px-4 py-4 text-neutral-600">
                     {formatDate(escrow.agreement.dueDate) || "—"}

@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import type { AgencyEscrow } from "@/types/agency-escrow";
-import { STATUS_LABELS, getEscrowNextStep, formatAmount, formatDate } from "./escrow-dashboard-utils";
+import { getEscrowNextStep, formatAmount, formatDate } from "./escrow-dashboard-utils";
 import { getPaymentParties } from "@/features/escrow/utils/roles";
+import { StatusChip } from "@/features/escrow/components/shared";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -48,9 +49,7 @@ export const EscrowCard = ({ escrow }: EscrowCardProps) => {
             <span className="font-medium tabular-nums text-neutral-950">
               {formatAmount(escrow.payment.amount, escrow.payment.asset)}
             </span>
-            <Badge variant="outline" className="w-fit">
-              {STATUS_LABELS[escrow.status]}
-            </Badge>
+            <StatusChip status={escrow.status} />
             {escrow.agreement.dueDate ? (
               <span className="text-neutral-600">
                 Due {formatDate(escrow.agreement.dueDate)}

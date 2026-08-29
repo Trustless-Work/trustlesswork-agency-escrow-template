@@ -34,9 +34,9 @@ export const DirectionField = ({
           <label
             key={direction}
             className={cn(
-              "relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition focus-within:ring-2 focus-within:ring-emerald-500/40",
+              "relative flex cursor-pointer flex-col gap-2 rounded-xl border p-4 transition focus-within:ring-2 focus-within:ring-[#2f7bff]/40",
               selected
-                ? "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-500/10"
+                ? "border-[#2f7bff] bg-[#2f7bff]/5 dark:border-[#7eb6ff] dark:bg-[#2f7bff]/10"
                 : "border-neutral-300 bg-white hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-950 dark:hover:border-neutral-600",
             )}
           >
@@ -52,7 +52,7 @@ export const DirectionField = ({
               className={cn(
                 "flex h-9 w-9 items-center justify-center rounded-lg",
                 selected
-                  ? "bg-emerald-500 text-white"
+                  ? "bg-[#2f7bff] text-white"
                   : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
               )}
             >
@@ -65,7 +65,7 @@ export const DirectionField = ({
               {copy.optionHint}
             </span>
             {selected && (
-              <span className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <span className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-[#2f7bff] text-white">
                 <Check className="h-3.5 w-3.5" aria-hidden />
               </span>
             )}

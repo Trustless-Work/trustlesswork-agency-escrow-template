@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import type { AgencyEscrow } from "@/types/agency-escrow";
 import { getPaymentParties } from "@/features/escrow/utils/roles";
-import { ReviewStatusBadge } from "./status-badge";
+import { StatusChip } from "@/features/escrow/components/shared";
 import { PageHeading } from "./typography";
 
 type ReviewHeaderProps = {
@@ -29,7 +29,7 @@ export function ReviewHeader({ escrow }: ReviewHeaderProps) {
         <span className="text-sm font-medium text-neutral-900">
           {payee.name}
         </span>
-        <ReviewStatusBadge status={escrow.status} />
+        <StatusChip status={escrow.status} />
       </div>
     </header>
   );

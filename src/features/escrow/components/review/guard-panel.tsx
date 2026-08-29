@@ -3,7 +3,7 @@ import { Clock, Loader2, SearchX, ShieldAlert } from "lucide-react";
 import type { AgencyEscrow } from "@/types/agency-escrow";
 import { shortenAddress } from "./format";
 import { ReviewCard } from "./review-card";
-import { ReviewStatusBadge } from "./status-badge";
+import { StatusChip } from "@/features/escrow/components/shared";
 import { BodyText, MutedText, SectionHeading, Subheading } from "./typography";
 
 function LoadingPanel() {
@@ -112,7 +112,7 @@ function WrongStatusPanel({ escrow }: { escrow: AgencyEscrow }) {
     <ReviewCard>
       <div className="flex flex-wrap items-center gap-3">
         <SectionHeading>{copy.title}</SectionHeading>
-        <ReviewStatusBadge status={escrow.status} />
+        <StatusChip status={escrow.status} />
       </div>
       <BodyText>{copy.body}</BodyText>
       {escrow.status === "revision_requested" && notes && (
@@ -185,7 +185,7 @@ function ApproverWorkSubmittedPanel({ escrow }: { escrow: AgencyEscrow }) {
   return (
     <ReviewCard bodyClassName="p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Clock aria-hidden className="h-5 w-5 text-emerald-500" />
+        <Clock aria-hidden className="h-5 w-5 text-[#2f7bff] dark:text-[#7eb6ff]" />
         <SectionHeading>Work is Submitted</SectionHeading>
       </div>
       <BodyText>

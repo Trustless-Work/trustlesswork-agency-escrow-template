@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +22,7 @@ import { ReleaseFeeBreakdown } from "@/features/escrow/components/release/releas
 import { ReleaseSummaryCard } from "@/features/escrow/components/release/release-summary-card";
 import { MockActorSwitcher } from "@/features/escrow/components/release/mock-actor-switcher";
 import { formatAmount } from "@/features/escrow/components/release/format";
+import { LifecycleShell, LifecyclePageHeader, LifecycleSkeleton, mutedClass } from "@/features/escrow/components/shared";
 
 type ClientReleaseViewProps = {
   escrowId: string;
@@ -36,23 +36,19 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
-        <section className="mx-auto w-full max-w-2xl space-y-6">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-9 w-64" />
-          <Skeleton className="h-40 w-full" />
-          <Skeleton className="h-52 w-full" />
-        </section>
-      </main>
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader context="Release" title="Release funds" />
+        <LifecycleSkeleton />
+      </LifecycleShell>
     );
   }
 
   if (isError) {
     return (
-      <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
-        <section className="mx-auto w-full max-w-2xl">
-          <BackLink escrowId={escrowId} />
-          <Card className="mt-8">
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader context="Release" title="Release funds" />
+        <div className="mt-8">
+          <Card>
             <CardHeader>
               <CardTitle>We could not load this escrow</CardTitle>
               <CardDescription>
@@ -68,21 +64,19 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
               </Link>
             </CardContent>
           </Card>
-        </section>
-      </main>
+        </div>
+      </LifecycleShell>
     );
   }
 
   if (!escrow) {
     return (
-      <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
-        <section className="mx-auto w-full max-w-2xl">
-          <BackLink escrowId={escrowId} />
-          <div className="mt-8">
-            <ReleaseBlockedCard escrowId={escrowId} reason="not-found" />
-          </div>
-        </section>
-      </main>
+      <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+        <LifecyclePageHeader context="Release" title="Release funds" />
+        <div className="mt-8">
+          <ReleaseBlockedCard escrowId={escrowId} reason="not-found" />
+        </div>
+      </LifecycleShell>
     );
   }
 
@@ -119,107 +113,87 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
   };
 
   return (
-    <main className="min-h-screen bg-muted/30 px-4 py-10 sm:px-6">
-      <section className="mx-auto w-full max-w-2xl">
-        <BackLink escrowId={escrowId} />
+    <LifecycleShell backHref={`/escrow/${escrowId}`} backLabel="Back to escrow">
+      <LifecyclePageHeader context="Release" title="Release funds" />
+      <p className={`mt-6 max-w-xl text-base leading-7 ${mutedClass}`}>
+        Review the payment breakdown and confirm to complete the protected
+        payment.
+      </p>
 
-        <div className="mt-8 border-b border-border pb-6">
-          <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-            Release
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-            Release funds
-          </h1>
-          <p className="mt-3 max-w-xl text-base leading-7 text-muted-foreground">
-            Review the payment breakdown and confirm to complete the protected
-            payment.
-          </p>
-        </div>
-
-        {isMock ? (
-          <div className="mt-6">
-            <MockActorSwitcher
-              workspaceName={escrow.workspace.name}
-              workspaceAddress={escrow.workspace.walletAddress}
-              counterpartyName={escrow.counterparty.name}
-              counterpartyAddress={escrow.counterparty.walletAddress}
-              currentAddress={address}
-              onSelect={setMockAddress}
-            />
-          </div>
-        ) : null}
-
-        <div className="mt-6 space-y-6">
-          <ReleaseSummaryCard escrow={escrow} />
-          <ReleaseFeeBreakdown
-            breakdown={breakdown}
-            asset={escrow.payment.asset}
+      {isMock ? (
+        <div className="mt-6">
+          <MockActorSwitcher
+            workspaceName={escrow.workspace.name}
+            workspaceAddress={escrow.workspace.walletAddress}
+            counterpartyName={escrow.counterparty.name}
+            counterpartyAddress={escrow.counterparty.walletAddress}
+            currentAddress={address}
+            onSelect={setMockAddress}
           />
-
-          {isCompleted || releaseMutation.isSuccess ? (
-            <ReleaseCompletedCard
-              escrowId={escrowId}
-              payeeName={payee.name}
-              netAmount={breakdown.netAmount}
-              asset={escrow.payment.asset}
-              alreadyReleased={isCompleted && !releaseMutation.isSuccess}
-            />
-          ) : !isApproved ? (
-            <ReleaseBlockedCard escrowId={escrowId} reason="not-approved" />
-          ) : !isAuthorized ? (
-            <ReleaseBlockedCard
-              escrowId={escrowId}
-              reason="not-authorized"
-              signerName={signerName}
-            />
-          ) : confirming ? (
-            <ReleaseConfirmPanel
-              payeeName={payee.name}
-              netAmount={breakdown.netAmount}
-              asset={escrow.payment.asset}
-              isPending={releaseMutation.isPending}
-              onConfirm={() => void handleRelease()}
-              onCancel={() => setConfirming(false)}
-            />
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Release funds</CardTitle>
-                <CardDescription>
-                  Complete the protected payment to {payee.name}.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm leading-6 text-muted-foreground">
-                  Releasing sends{" "}
-                  <span className="font-medium text-foreground">
-                    {formatAmount(breakdown.netAmount)} {escrow.payment.asset}
-                  </span>{" "}
-                  to {payee.name} and routes the platform fee automatically.
-                  This completes the protected payment and cannot be undone.
-                </p>
-                <Button
-                  type="button"
-                  size="lg"
-                  className="w-full sm:w-auto"
-                  onClick={() => setConfirming(true)}
-                >
-                  Release funds
-                </Button>
-              </CardContent>
-            </Card>
-          )}
         </div>
-      </section>
-    </main>
+      ) : null}
+
+      <div className="mt-6 space-y-6">
+        <ReleaseSummaryCard escrow={escrow} />
+        <ReleaseFeeBreakdown
+          breakdown={breakdown}
+          asset={escrow.payment.asset}
+        />
+
+        {isCompleted || releaseMutation.isSuccess ? (
+          <ReleaseCompletedCard
+            escrowId={escrowId}
+            payeeName={payee.name}
+            netAmount={breakdown.netAmount}
+            asset={escrow.payment.asset}
+            alreadyReleased={isCompleted && !releaseMutation.isSuccess}
+          />
+        ) : !isApproved ? (
+          <ReleaseBlockedCard escrowId={escrowId} reason="not-approved" />
+        ) : !isAuthorized ? (
+          <ReleaseBlockedCard
+            escrowId={escrowId}
+            reason="not-authorized"
+            signerName={signerName}
+          />
+        ) : confirming ? (
+          <ReleaseConfirmPanel
+            payeeName={payee.name}
+            netAmount={breakdown.netAmount}
+            asset={escrow.payment.asset}
+            isPending={releaseMutation.isPending}
+            onConfirm={() => void handleRelease()}
+            onCancel={() => setConfirming(false)}
+          />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Release funds</CardTitle>
+              <CardDescription>
+                Complete the protected payment to {payee.name}.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm leading-6 text-muted-foreground">
+                Releasing sends{" "}
+                <span className="font-medium text-foreground">
+                  {formatAmount(breakdown.netAmount)} {escrow.payment.asset}
+                </span>{" "}
+                to {payee.name} and routes the platform fee automatically.
+                This completes the protected payment and cannot be undone.
+              </p>
+              <Button
+                type="button"
+                size="lg"
+                className="w-full sm:w-auto"
+                onClick={() => setConfirming(true)}
+              >
+                Release funds
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </LifecycleShell>
   );
 };
-
-const BackLink = ({ escrowId }: { escrowId: string }) => (
-  <Link
-    href={`/escrow/${escrowId}`}
-    className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-  >
-    Back to escrow
-  </Link>
-);

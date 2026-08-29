@@ -14,7 +14,7 @@ export const fieldInputClass =
 export function inputStateClass(hasError: boolean): string {
   return hasError
     ? "border-red-400 focus:border-red-500 focus:ring-red-500/30 dark:border-red-500/70"
-    : "border-neutral-300 focus:border-emerald-500 focus:ring-emerald-500/30 dark:border-neutral-700";
+    : "border-neutral-300 focus:border-[#2f7bff] focus:ring-[#2f7bff]/30 dark:border-neutral-700";
 }
 
 export function errorId(htmlFor: string): string {

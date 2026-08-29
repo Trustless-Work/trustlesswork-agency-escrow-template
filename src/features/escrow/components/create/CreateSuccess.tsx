@@ -50,7 +50,7 @@ export const CreateSuccess = ({
   return (
     <div className="mx-auto w-full max-w-2xl">
       <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8 dark:border-neutral-800 dark:bg-neutral-950">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2f7bff]/10 text-[#2f7bff] dark:bg-[#2f7bff]/15 dark:text-[#7eb6ff]">
           <CircleCheckBig className="h-6 w-6" aria-hidden />
         </div>
         <h1 className="mt-4 text-2xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-50">
@@ -99,11 +99,11 @@ export const CreateSuccess = ({
           </div>
         </dl>
 
-        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/30 dark:bg-emerald-500/10">
-          <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+        <div className="mt-6 rounded-xl border border-[#2f7bff]/20 bg-[#2f7bff]/5 p-4 dark:border-[#2f7bff]/30 dark:bg-[#2f7bff]/10">
+          <p className="text-sm font-semibold text-[#1e5fd9] dark:text-[#7eb6ff]">
             Next: {copy.nextActionTitle}
           </p>
-          <p className="mt-1 text-sm leading-6 text-emerald-700 dark:text-emerald-300/90">
+          <p className="mt-1 text-sm leading-6 text-[#2f7bff] dark:text-[#9cc8ff]">
             {copy.nextAction(escrow.counterparty.name)}
           </p>
         </div>
