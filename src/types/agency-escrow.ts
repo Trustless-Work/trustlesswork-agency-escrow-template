@@ -64,6 +64,7 @@ export type AgencyEscrowRoles = {
 };
 
 export type AgencyEscrowFee = {
+  protocolFeeBps: number;
   platformFeeBps: number;
   platformAddress: string;
 };

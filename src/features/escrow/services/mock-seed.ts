@@ -56,7 +56,7 @@ export const MOCK_ESCROW_SEED: AgencyEscrow[] = [
         "Roadmap delivered, workshop completed, and final recommendations shared.",
     },
     roles: roles("receivable", ACME),
-    fee: { platformFeeBps: 30, platformAddress: PLATFORM },
+    fee: { protocolFeeBps: 30, platformFeeBps: 30, platformAddress: PLATFORM },
     status: "created",
     timestamps: { createdAt: "2026-08-16T14:00:00.000Z" },
     transactions: {},
@@ -81,7 +81,7 @@ export const MOCK_ESCROW_SEED: AgencyEscrow[] = [
         "Matches approved design, responsive on mobile/desktop, and deployed to staging.",
     },
     roles: roles("payable", MARIA),
-    fee: { platformFeeBps: 30, platformAddress: PLATFORM },
+    fee: { protocolFeeBps: 30, platformFeeBps: 30, platformAddress: PLATFORM },
     status: "funded",
     timestamps: {
       createdAt: "2026-08-14T12:00:00.000Z",
@@ -110,7 +110,7 @@ export const MOCK_ESCROW_SEED: AgencyEscrow[] = [
       evidence: "https://example.com/deliverables/product-audit",
     },
     roles: roles("receivable", ACME),
-    fee: { platformFeeBps: 30, platformAddress: PLATFORM },
+    fee: { protocolFeeBps: 30, platformFeeBps: 30, platformAddress: PLATFORM },
     status: "in_review",
     timestamps: {
       createdAt: "2026-08-10T10:00:00.000Z",
@@ -139,7 +139,7 @@ export const MOCK_ESCROW_SEED: AgencyEscrow[] = [
       deliverableLinks: ["https://example.com/event-site"],
     },
     roles: roles("payable", MARIA),
-    fee: { platformFeeBps: 30, platformAddress: PLATFORM },
+    fee: { protocolFeeBps: 30, platformFeeBps: 30, platformAddress: PLATFORM },
     status: "approved",
     timestamps: {
       createdAt: "2026-08-08T09:00:00.000Z",

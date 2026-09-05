@@ -21,6 +21,7 @@ export function FundingSummaryCard({ escrow }: { escrow: AgencyEscrow }) {
   const breakdown = calculateFeeBreakdown(
     escrow.payment.amount,
     escrow.fee.platformFeeBps,
+    escrow.fee.protocolFeeBps,
   );
 
   return (
