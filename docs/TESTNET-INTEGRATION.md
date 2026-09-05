@@ -293,9 +293,9 @@ normalized to safe messages (`toSafeErrorMessage`) before reaching the UI.
   installed types are authoritative.
 - **`sendTransaction(signedXdr: string)`** takes a plain string, while some docs
   show `{ signedXdr }`. The installed type is a string.
-- **Funding amount type**: the bundled skill says fund-escrow amount is a string;
-  the installed `FundEscrowPayload.amount` is a **number**, matching the issue's
-  authoritative correction. We pass a number.
+- **Funding amount type**: both the refreshed canonical skill and installed
+  `FundEscrowPayload.amount` define funding amount as a **number** (the earlier
+  local documentation override in #20 is now resolved and canonical). We pass a number.
 - **Tx hashes not surfaced**: `SendTransactionResponse` is `{ status, message }`
   with no transaction hash, and deploy returns `contractId` but no hash. We retain
   the contract ID as the durable reference; per-write tx hashes are not available

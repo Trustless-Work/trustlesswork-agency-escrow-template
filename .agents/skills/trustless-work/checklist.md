@@ -26,7 +26,7 @@ Use this checklist before going to production. Each item maps to a verifiable si
 
 - [ ] `x-api-key` header on all write requests
 - [ ] `amount` (deploy) and `platformFee` sent as **numbers** (`1000`, not `"1000"`)
-- [ ] `amount` in `fund-escrow` sent as **string** (`"1000"`, not `1000`) — exception to the rule
+- [ ] `amount` in `fund-escrow` sent as **number** (`1000`, not `"1000"`)
 - [ ] Milestone `amount` (multi-release) sent as **number**
 - [ ] `milestoneIndex` sent as **string** (e.g., `"0"` not `0`)
 - [ ] `distributions` array used in resolve-dispute (not `approverFunds`/`receiverFunds`)

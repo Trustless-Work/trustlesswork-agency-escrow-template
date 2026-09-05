@@ -226,7 +226,7 @@ const { fundEscrow } = useFundEscrow();
 const result = await fundEscrow({
   contractId: 'CXXXXX...',
   signer: funderAddress,   // must be the Funder role address
-  amount: '1000',          // string in fund-escrow (unlike deploy where amount is number)
+  amount: 1000,            // number in fund-escrow (all amount fields in Trustless Work are numbers)
 } satisfies FundEscrowPayload);
 ```
 
