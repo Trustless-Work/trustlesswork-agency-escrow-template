@@ -36,6 +36,7 @@ export const SubmissionSummaryCard = ({ escrow }: SubmissionSummaryCardProps) =>
   const fee = calculateFeeBreakdown(
     escrow.payment.amount,
     escrow.fee.platformFeeBps,
+    escrow.fee.protocolFeeBps,
   )
   const dueDate = formatDate(escrow.agreement.dueDate)
 

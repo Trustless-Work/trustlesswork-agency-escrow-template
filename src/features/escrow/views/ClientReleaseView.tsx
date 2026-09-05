@@ -88,6 +88,7 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
   const breakdown = calculateFeeBreakdown(
     escrow.payment.amount,
     escrow.fee.platformFeeBps,
+    escrow.fee.protocolFeeBps,
   );
   const isApproved = escrow.status === "approved";
   const isCompleted = escrow.status === "released" || escrow.status === "closed";

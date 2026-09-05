@@ -153,6 +153,7 @@ export const mockAgencyEscrowService: AgencyEscrowService = {
       milestone: input.milestone,
       roles,
       fee: {
+        protocolFeeBps: input.protocolFeeBps ?? 30,
         platformFeeBps: input.platformFeeBps,
         platformAddress: input.platformAddress,
       },
