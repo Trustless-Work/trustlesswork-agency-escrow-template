@@ -1,0 +1,4 @@
+packages:
+  - '.'
+overrides:
+  protobufjs: '>=7.5.6'
