@@ -29,8 +29,8 @@ export const ReleaseConfirmPanel = ({
           </p>
           <p className="text-sm leading-6 text-muted-foreground">
             Releasing completes the protected payment. The net amount is sent to
-            the payee and the platform fee is routed automatically. This action
-            is final and cannot be undone.
+            the payee and applicable platform and protocol fees are routed
+            automatically. This action is final and cannot be undone.
           </p>
         </div>
       </div>

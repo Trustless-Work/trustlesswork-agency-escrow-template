@@ -179,7 +179,7 @@ export const ClientReleaseView = ({ escrowId }: ClientReleaseViewProps) => {
                 <span className="font-medium text-foreground">
                   {formatAmount(breakdown.netAmount)} {escrow.payment.asset}
                 </span>{" "}
-                to {payee.name} and routes the platform fee automatically.
+                to {payee.name} after routing platform and protocol fees automatically.
                 This completes the protected payment and cannot be undone.
               </p>
               <Button

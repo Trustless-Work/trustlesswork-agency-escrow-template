@@ -37,7 +37,7 @@ export const EscrowPaymentCard = ({ escrow }: EscrowPaymentCardProps) => {
             {formatAmount(escrow.payment.amount, escrow.payment.asset)}
           </p>
         </div>
-        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
             <dt className={viewerLabelClass}>
               Platform fee ({formatFeePercent(escrow.fee.platformFeeBps)})
@@ -47,7 +47,15 @@ export const EscrowPaymentCard = ({ escrow }: EscrowPaymentCardProps) => {
             </dd>
           </div>
           <div>
-            <dt className={viewerLabelClass}>Payee receives</dt>
+            <dt className={viewerLabelClass}>
+              Protocol fee ({formatFeePercent(breakdown.protocolFeeBps)})
+            </dt>
+            <dd className={`mt-1 ${viewerMutedClass}`}>
+              {formatAmount(breakdown.protocolFeeAmount, escrow.payment.asset)}
+            </dd>
+          </div>
+          <div>
+            <dt className={viewerLabelClass}>Payee receives (est.)</dt>
             <dd className="mt-1 font-medium text-white">
               {formatAmount(breakdown.netAmount, escrow.payment.asset)}
             </dd>

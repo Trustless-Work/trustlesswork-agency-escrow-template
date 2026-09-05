@@ -22,7 +22,7 @@ Agency work breaks when **delivery, scope, and payment** live in separate tools.
 | 2 | Client | Reviews terms and funds the escrow (stablecoin on Stellar) |
 | 3 | Agency | Delivers work and marks the milestone as submitted |
 | 4 | Client | Reviews deliverables and approves the milestone |
-| 5 | Client | Releases funds to the agency; platform fee is routed automatically |
+| 5 | Client | Releases funds to the agency; platform and protocol fees are routed automatically |
 | 6 | Both | View escrow status and event timeline in the dashboard |
 
 ### Default role mapping (MVP)
@@ -44,7 +44,7 @@ Agency work breaks when **delivery, scope, and payment** live in separate tools.
 - One milestone per escrow
 - Create escrow, assign roles, define amount and acceptance criteria
 - Client funding, agency submission, client approval, fund release
-- Platform fee routing and escrow status viewer for both parties
+- Platform and protocol fee routing and escrow status viewer for both parties
 
 **Out of scope (future versions)**
 

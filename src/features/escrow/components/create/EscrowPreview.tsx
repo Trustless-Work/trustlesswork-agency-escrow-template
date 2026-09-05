@@ -144,7 +144,11 @@ export const EscrowPreview = ({ data }: { data: EscrowPreviewData }) => {
           value={formatAsset(data.fee.platformFeeAmount, data.asset)}
         />
         <Row
-          label={`${data.payeeName || "Payee"} receives`}
+          label={`Protocol fee (${formatFeePercent(data.fee.protocolFeeBps)})`}
+          value={formatAsset(data.fee.protocolFeeAmount, data.asset)}
+        />
+        <Row
+          label={`${data.payeeName || "Payee"} receives (est.)`}
           value={formatAsset(data.fee.netAmount, data.asset)}
           strong
         />
