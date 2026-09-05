@@ -151,7 +151,7 @@ Important type boundary:
 
 - deploy amount: `number`
 - platform fee: `number`
-- fund amount: SDK payload `string`
+- fund amount: `number`
 - milestone index for operations: SDK payload `string`
 
 Write hooks return unsigned XDR. The wallet belonging to the required role signs and submits the transaction.

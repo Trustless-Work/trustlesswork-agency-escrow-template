@@ -109,7 +109,7 @@ async function fundEscrow(contractId) {
   const { unsignedTransaction } = await callApi('/escrow/single-release/fund-escrow', {
     contractId,
     signer: process.env.FUNDER_ADDRESS,
-    amount: '1000',   // string in fund-escrow (unlike deploy where amount is number)
+    amount: 1000,   // number in fund-escrow (all amount fields in Trustless Work are numbers)
   });
   const signedXdr = signXdr(unsignedTransaction, process.env.FUNDER_SECRET_KEY);
   return sendTransaction(signedXdr);

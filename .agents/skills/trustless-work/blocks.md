@@ -314,7 +314,7 @@ const handleApprove = async () => {
 ```
 
 ### ❌ 7. Forgetting trustlines in the onboarding flow
-When a new user connects their wallet, check and establish trustlines before they can participate in any escrow. Use `POST /helper/set-trustline` and sign/submit the returned XDR.
+When a new user connects their wallet, ensure trustlines are established before they can participate in any escrow. Note that the `/helper/set-trustline` endpoint no longer exists — each participant must find and add the asset trustline directly from their own wallet (e.g. Freighter → Add Asset / Add Trustline) using the G… issuer address.
 
 ---
 

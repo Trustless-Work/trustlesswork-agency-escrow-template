@@ -199,7 +199,7 @@ Every escrow has a `roles` object. Each role is a **Stellar public address (G…
 | Field | Type | Notes |
 |-------|------|-------|
 | `amount` (deploy) | `number` | ✅ `1000` ❌ `"1000"` |
-| `amount` (fund-escrow) | `string` | ✅ `"1000"` ❌ `1000` — exception |
+| `amount` (fund-escrow) | `number` | ✅ `1000` ❌ `"1000"` |
 | `platformFee` | `number` | ✅ `2` ❌ `"2"` |
 | Milestone `amount` (multi-release) | `number` | ✅ `500` ❌ `"500"` |
 | `milestoneIndex` | `string` | ✅ `"0"` ❌ `0` (operation params only) |
@@ -209,7 +209,7 @@ Every escrow has a `roles` object. Each role is a **Stellar public address (G…
 | `trustline.address` | `string` | Must be G… issuer address, NOT C… contract |
 | `trustline.symbol` | `string` | e.g. `"USDC"` |
 
-> 🔴 **Form validation rule:** `amount` in deploy and `platformFee` use `z.number()`. `milestoneIndex` uses `z.string()`. `amount` in fund-escrow uses `z.string()`. Use the table above as the reference — do not assume all amounts share the same type.
+> 🔴 **Form validation rule:** `amount` in deploy, `amount` in fund-escrow, and `platformFee` all use `z.number()`. `milestoneIndex` uses `z.string()`. All amount fields in Trustless Work are numbers. Use the table above as the reference.
 
 ---
 

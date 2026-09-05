@@ -126,7 +126,7 @@ All paths use `{type}` = `single-release` or `multi-release`.
 {
   "contractId": "CXXXXX...",
   "signer": "GFUNDER_ADDRESS",
-  "amount": "1000"
+  "amount": 1000
 }
 ```
 
@@ -297,7 +297,7 @@ Every operation has a required signer role. Signing `approve-milestone` with the
 // CORRECT
 { "amount": 1000, "platformFee": 2 }
 ```
-Same rule applies to milestone `amount` in multi-release payloads. Note: `fund-escrow`'s `amount` is a **string** (exception to the rule).
+Same rule applies to milestone `amount` in multi-release payloads and `fund-escrow`. All amount fields are **numbers**, including funding.
 
 ### ❌ 4. Missing `trustline` object or using wrong address type
 ```json
