@@ -8,11 +8,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue.svg)](https://www.typescriptlang.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A **milestone-based commercial escrow workflow** for agencies, consultancies, product studios, and independent contractors to lock client retainers upfront, deliver in clear increments, and release payment upon verifiable approval.
+A **single-milestone commercial escrow workflow** for agencies, consultancies, product studios, and independent contractors to lock client retainers upfront, protect a single payment and deliverable, and release payment upon verifiable approval.
 
 > **Agencies stop chasing invoices. Clients only release funds when work is delivered.**
 
-Built on [Trustless Work](https://docs.trustlesswork.com/trustless-work) — Escrow-as-a-Service powered by Soroban smart contracts on Stellar. This template serves as a production-grade, dogfoodable reference implementation that can be immediately forked, adapted, and deployed for client engagements.
+Built on [Trustless Work](https://docs.trustlesswork.com/trustless-work) — Escrow-as-a-Service powered by Soroban smart contracts on Stellar. This template serves as a real, testnet, dogfoodable developer reference implementation that can be immediately forked, adapted, and explored for client engagements.
 
 ---
 
@@ -32,6 +32,7 @@ Built on [Trustless Work](https://docs.trustlesswork.com/trustless-work) — Esc
 - [Two Canonical End-to-End Walkthroughs](#two-canonical-end-to-end-walkthroughs)
   - [Scenario 1: Receivable (Agency Gets Paid)](#scenario-1-receivable-agency-gets-paid)
   - [Scenario 2: Payable (Agency Pays Subcontractor)](#scenario-2-payable-agency-pays-subcontractor)
+- [V1 Release Readiness & Dogfood Verification Report](#v1-release-readiness--dogfood-verification-report)
 - [V1 Scope & Known Boundaries](#v1-scope--known-boundaries)
 - [Contributing & Development](#contributing--development)
 - [Maintainers](#maintainers)
@@ -85,8 +86,8 @@ In Trustless Work single-release escrows, roles are derived deterministically ba
 | **Approver** | Client | Agency Workspace | Reviews deliverables and signs milestone approval. |
 | **Release Signer** | Client | Agency Workspace | Executes the final on-chain fund release. |
 | **Receiver / Payee** | Agency Workspace | Contractor / Vendor | Receives net payment upon release execution. |
-| **Platform Address** | Platform (`NEXT_PUBLIC_PLATFORM_ADDRESS`) | Platform (`NEXT_PUBLIC_PLATFORM_ADDRESS`) | Receives the protocol fee (0.30% / 30 bps). |
-| **Dispute Resolver** | Arbiter (`NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS`) | Arbiter (`NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS`) | Designated fallback address for dispute arbitration. |
+| **Platform Address** | Platform (`NEXT_PUBLIC_PLATFORM_ADDRESS`) | Platform (`NEXT_PUBLIC_PLATFORM_ADDRESS`) | Receives the configured platform fee (e.g. 0.30% / 30 bps). |
+| **Dispute Resolver** | Arbiter (`NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS`) | Arbiter (`NEXT_PUBLIC_DISPUTE_RESOLVER_ADDRESS`) | Contract-level configuration address required by Soroban integration (in-app dispute & arbitration UX is out of V1 scope). |
 
 ---
 
@@ -178,7 +179,7 @@ cd trustlesswork-agency-escrow-template
 pnpm install
 
 # 3. Create local environment file
-cp .env.example .env.local
+cp .env.local.example .env.local
 ```
 
 ### Running Mock Mode (Default & Credential-Free)
@@ -281,7 +282,7 @@ To deliver a comprehensive agency UX without requiring a custodial backend datab
 5. **Approval & Fund Release**:
    - Client reviews updated deliverables and clicks **"Approve Deliverable"** (signs on-chain approval).
    - Client navigates to `/escrow/[id]/release` and triggers **"Release Payment"**.
-   - Net payment (`4,985 USDC`) is instantly deposited into TechRebel's wallet; platform fee (`15 USDC` / 30 bps) is routed to `NEXT_PUBLIC_PLATFORM_ADDRESS`.
+   - **Fee Semantics & Settlement Note**: On-chain fund release executes settlement through Trustless Work. Net funds are routed to TechRebel's wallet after deducting the configured platform fee (`NEXT_PUBLIC_PLATFORM_FEE_BPS`, e.g. 30 bps / 0.30% = 15 USDC) to `NEXT_PUBLIC_PLATFORM_ADDRESS` as well as the underlying Trustless Work protocol release fee (~30 bps observed on testnet, currently tracked for explicit dual-fee UI display in [#45](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/45)). Actual on-chain net deposited reflects both deductions.
 
 ---
 
@@ -301,7 +302,46 @@ To deliver a comprehensive agency UX without requiring a custodial backend datab
 4. **Approval & Release**:
    - Agency reviews the report at `/escrow/[id]/review` and approves the delivery.
    - Agency executes the release transaction at `/escrow/[id]/release`.
-   - AuditWorks receives net `2,492.50 USDC` in their Stellar wallet.
+   - AuditWorks receives net funds in their Stellar wallet (reflecting deduction of the 30 bps platform fee and Trustless Work protocol fee, tracked in [#45](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/45)).
+
+---
+
+## V1 Release Readiness & Dogfood Verification Report
+
+In accordance with release-readiness criteria ([#34](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/34)), the template has undergone end-to-end verification across both mock simulation and live Stellar Testnet:
+
+### 1. Dogfood Verification Matrix
+
+| Area | Acceptance Test | Result | Notes / Details |
+| :--- | :--- | :--- | :--- |
+| **Receivable Flow** | Agency creates $\rightarrow$ Client funds $\rightarrow$ Agency submits $\rightarrow$ Client approves $\rightarrow$ Client releases | ✅ Verified | Tested in Mock and live Testnet. |
+| **Payable Flow** | Agency creates $\rightarrow$ Agency funds $\rightarrow$ Contractor submits $\rightarrow$ Agency approves $\rightarrow$ Agency releases | ✅ Verified | Tested in Mock and live Testnet. |
+| **Revision Loop** | Pre-approval change request $\rightarrow$ status `changes_requested` $\rightarrow$ resubmission | ✅ Verified | Local metadata preserves revision feedback without on-chain aborts. |
+| **Deep Links & Refresh** | Direct navigation to `/escrow/[id]/*` with page reload | ✅ Verified | On-chain contract state and local metadata rehydrate cleanly. |
+| **Role-Gated Actions** | Non-funder blocked on deposit; non-approver blocked on sign-off | ✅ Verified | Interactive actor switcher (mock) & connected wallet (testnet) enforce access. |
+| **Responsive Layouts** | Mobile (375px), Tablet (768px), and Desktop (1440px) viewports | ✅ Verified | Tailwind responsive containers with zero layout truncation. |
+| **Clean Setup** | README-only setup from fresh checkout using `.env.local.example` | ✅ Verified | Zero tribal knowledge or hidden dependencies. |
+
+### 2. Live Testnet References & Money Flow Evidence
+
+Evidence established during real two-wallet integration ([#20](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/20) / [PR #37](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/pull/37)):
+- **Network**: Stellar Testnet (`Test SDF Network ; September 2015`)
+- **Canonical Asset**: Testnet USDC (`GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5`)
+- **Observed Settlement Verification**:
+  - **100 USDC Escrow**: Funder deposits 100.0 USDC $\rightarrow$ Release pays Receiver `99.40 USDC` net, Platform `0.30 USDC` (30 bps platform fee), and Trustless Work Protocol `~0.30 USDC` (~30 bps protocol fee).
+  - **50 USDC Escrow**: Funder deposits 50.0 USDC $\rightarrow$ Release pays Receiver `49.70 USDC` net, Platform `0.15 USDC` (30 bps platform fee), and Trustless Work Protocol `~0.15 USDC` (~30 bps protocol fee).
+
+### 3. Discovered Defects & Follow-Up Linkages
+
+During the V1 release pass, two architectural items were documented and opened for dedicated tracking:
+- **[#45](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/45)**: `[BUG][FEES] Reconcile Trustless Work protocol fee in payout previews and net amounts` — UI fee helper audit to explicitly split platform fee vs Trustless Work protocol fee across preview, funding, and release dialogs.
+- **[#46](https://github.com/Trustless-Work/trustlesswork-agency-escrow-template/issues/46)**: `[SECURITY] Remove vulnerable protobufjs@7.4.0 transitive dependency from wallet stack` — Transitive `@creit.tech/stellar-wallets-kit` dependency override pass for GHSA-xq3m-2v4x-88gg.
+
+### 4. Final V1 Boundaries & Operating Assumptions
+- **Testnet Reference Target**: V1 is explicitly targeted at Stellar Testnet; production deployment requires custom contract verification, backend persistence, and dedicated authentication.
+- **Single-Milestone Model**: Exactly one milestone per escrow (Single Release).
+- **Browser-Local Metadata**: Revision comments and off-chain delivery details are stored in `localStorage`.
+- **Dispute Resolver**: Address is configured as a required contract parameter, but arbitration UX is out of V1 scope.
 
 ---
 
@@ -313,7 +353,7 @@ To deliver a comprehensive agency UX without requiring a custodial backend datab
 | **Network Support** | **Stellar Testnet** only (`NEXT_PUBLIC_USE_MAINNET=false`) | Stellar Public Mainnet |
 | **Asset Support** | **USDC** (settlement asset) | Multi-asset (XLM, EURC, custom Stellar tokens) |
 | **Metadata Storage** | **Browser LocalStorage** + On-Chain State | Decentralized IPFS metadata indexing or cloud backend |
-| **Dispute Resolution** | Designated resolver role configured | On-chain arbitration and evidence voting portal |
+| **Dispute Resolution** | Configured integration address (in-app dispute & arbitration UX is out of V1 scope) | On-chain arbitration and evidence voting portal |
 
 ---
 
