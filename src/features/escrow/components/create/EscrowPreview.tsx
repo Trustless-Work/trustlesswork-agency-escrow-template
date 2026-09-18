@@ -138,13 +138,17 @@ export const EscrowPreview = ({ data }: { data: EscrowPreviewData }) => {
       </div>
 
       <div className="mt-5 space-y-2 border-t border-neutral-200 pt-4 dark:border-neutral-800">
-        <Row label="Amount" value={amountLabel} strong />
+        <Row label="Gross escrow amount" value={amountLabel} strong />
         <Row
           label={`Platform fee (${formatFeePercent(data.fee.platformFeeBps)})`}
           value={formatAsset(data.fee.platformFeeAmount, data.asset)}
         />
         <Row
-          label={`${data.payeeName || "Payee"} receives`}
+          label={`Trustless Work protocol fee (${formatFeePercent(data.fee.protocolFeeBps)})`}
+          value={formatAsset(data.fee.protocolFeeAmount, data.asset)}
+        />
+        <Row
+          label={`Expected ${data.payeeName || "Payee"} net`}
           value={formatAsset(data.fee.netAmount, data.asset)}
           strong
         />
